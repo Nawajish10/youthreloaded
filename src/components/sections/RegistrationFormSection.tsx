@@ -80,10 +80,10 @@ export function RegistrationFormSection() {
 
   const formValues = watch();
 
-  // Focus active input on step change
+  // Focus active input on step change without scrolling the page down on initial load
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
+    if (currentStep > 1 && inputRef.current) {
+      inputRef.current.focus({ preventScroll: true });
     }
   }, [currentStep]);
 
