@@ -83,10 +83,10 @@ export function ContactSection() {
                   href="https://wa.me/917479207804?text=Hi%20Youth%20Gym%20Reloaded!%20I%20want%20to%20know%20more%20about%20membership%20plans."
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3 bg-[#171717] border border-white/10 text-white rounded-xl hover:border-[#E50914] transition-colors"
-                  aria-label="WhatsApp"
+                  className="p-3 bg-[#25D366]/10 border border-[#25D366]/40 text-[#25D366] rounded-xl hover:bg-[#25D366] hover:text-white transition-colors"
+                  aria-label="WhatsApp Us"
                 >
-                  <MessageCircle className="h-4 w-4 text-[#E50914]" />
+                  <MessageCircle className="h-4 w-4" />
                 </a>
               </div>
             </div>

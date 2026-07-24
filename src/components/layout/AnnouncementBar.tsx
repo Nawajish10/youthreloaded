@@ -37,9 +37,9 @@ export function AnnouncementBar() {
             href="https://wa.me/917479207804?text=Hi%20Youth%20Gym%20Reloaded!%20I%20want%20to%20know%20more%20about%20membership%20plans."
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-neutral-300 hover:text-[#E50914] transition-colors"
+            className="flex items-center gap-1.5 text-neutral-300 hover:text-[#25D366] transition-colors"
           >
-            <MessageCircle className="h-3.5 w-3.5 text-[#E50914]" />
+            <MessageCircle className="h-3.5 w-3.5 text-[#25D366]" />
             <span className="hidden sm:inline">WhatsApp</span>
           </a>
         </div>

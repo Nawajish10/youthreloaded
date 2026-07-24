@@ -130,9 +130,20 @@ export function RegistrationFormSection() {
     }
   };
 
-  // Final Form Submission
+  // Final Form Submission (Instant UX flow)
   const onSubmit = async (data: OnboardingValues) => {
-    setLoading(true);
+    if (loading) return; // Prevent double submit
+
+    let showSpinnerTimer: NodeJS.Timeout | null = null;
+    let isFinished = false;
+
+    // Show "Submitting..." ONLY if request takes longer than 300ms
+    showSpinnerTimer = setTimeout(() => {
+      if (!isFinished) {
+        setLoading(true);
+      }
+    }, 300);
+
     try {
       const response = await fetch("/api/register", {
         method: "POST",
@@ -140,6 +151,9 @@ export function RegistrationFormSection() {
         body: JSON.stringify(data),
       });
       const result = await response.json();
+      isFinished = true;
+      if (showSpinnerTimer) clearTimeout(showSpinnerTimer);
+
       if (result.success) {
         setRegId(result.registrationId);
         setSubmitted(true);
@@ -147,6 +161,8 @@ export function RegistrationFormSection() {
         alert("Registration error: " + (result.message || "Please check details"));
       }
     } catch (err) {
+      isFinished = true;
+      if (showSpinnerTimer) clearTimeout(showSpinnerTimer);
       console.error("Submission error:", err);
       alert("Registration failed. Please try again.");
     } finally {
@@ -714,9 +730,9 @@ export function RegistrationFormSection() {
                   href="https://wa.me/917479207804?text=Hi%20Youth%20Gym%20Reloaded!%20I%20just%20submitted%20my%20registration."
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full sm:flex-1 py-3.5 bg-[#171717] border border-white/20 text-white font-bold text-xs uppercase tracking-widest rounded-full hover:border-[#E50914] hover:text-[#E50914] transition-all flex items-center justify-center gap-2"
+                  className="w-full sm:flex-1 py-3.5 bg-[#25D366]/10 border border-[#25D366]/40 text-[#25D366] font-bold text-xs uppercase tracking-widest rounded-full hover:bg-[#25D366] hover:text-white transition-all flex items-center justify-center gap-2"
                 >
-                  <MessageCircle className="h-4 w-4 text-[#E50914]" />
+                  <MessageCircle className="h-4 w-4" />
                   <span>WhatsApp</span>
                 </a>
               </div>
