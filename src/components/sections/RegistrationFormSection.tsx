@@ -5,24 +5,27 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { AnimatePresence, motion } from "framer-motion";
+import confetti from "canvas-confetti";
 import {
   ArrowRight,
   ArrowLeft,
   CheckCircle2,
-  Flame,
   Phone,
   MessageCircle,
   Dumbbell,
   Zap,
   Target,
-  Crown,
-  HeartPulse,
   Sun,
   Sunrise,
   Moon,
   Clock,
   RotateCcw,
+  Sparkles,
+  User,
+  Smartphone,
+  Flame,
 } from "lucide-react";
+import { MascotAvatar, MascotPose } from "@/components/mascot/MascotAvatar";
 
 // Form Schema for all 8 Steps
 const onboardingSchema = z.object({
@@ -52,6 +55,8 @@ export function RegistrationFormSection() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [regId, setRegId] = useState<string | null>(null);
+  const [isTyping, setIsTyping] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -85,7 +90,32 @@ export function RegistrationFormSection() {
     if (currentStep > 1 && inputRef.current) {
       inputRef.current.focus({ preventScroll: true });
     }
+    setHasError(false);
   }, [currentStep]);
+
+  // Determine Mascot Pose per Step
+  const getMascotPose = (): MascotPose => {
+    switch (currentStep) {
+      case 1:
+        return "waving";
+      case 2:
+        return "phone";
+      case 3:
+        return "pointing_age";
+      case 4:
+        return "measuring";
+      case 5:
+        return "lifting";
+      case 6:
+        return "flexing";
+      case 7:
+        return "membership";
+      case 8:
+        return "thumbsup";
+      default:
+        return "waving";
+    }
+  };
 
   // Handle Step Validation and Advancement
   const handleNextStep = async () => {
@@ -108,8 +138,12 @@ export function RegistrationFormSection() {
     }
 
     if (isValid && currentStep < TOTAL_STEPS) {
+      setHasError(false);
       setDirection(1);
       setCurrentStep((prev) => prev + 1);
+    } else if (!isValid) {
+      setHasError(true);
+      setTimeout(() => setHasError(false), 2000);
     }
   };
 
@@ -130,14 +164,13 @@ export function RegistrationFormSection() {
     }
   };
 
-  // Final Form Submission (Instant UX flow)
+  // Final Form Submission (Instant UX flow + Confetti burst)
   const onSubmit = async (data: OnboardingValues) => {
-    if (loading) return; // Prevent double submit
+    if (loading) return;
 
     let showSpinnerTimer: NodeJS.Timeout | null = null;
     let isFinished = false;
 
-    // Show "Submitting..." ONLY if request takes longer than 300ms
     showSpinnerTimer = setTimeout(() => {
       if (!isFinished) {
         setLoading(true);
@@ -157,12 +190,26 @@ export function RegistrationFormSection() {
       if (result.success) {
         setRegId(result.registrationId);
         setSubmitted(true);
+
+        // Fire Confetti animation 🎉
+        try {
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ["#22C55E", "#15803D", "#F59E0B", "#3B82F6"],
+          });
+        } catch (e) {
+          console.log("Confetti error:", e);
+        }
       } else {
+        setHasError(true);
         alert("Registration error: " + (result.message || "Please check details"));
       }
     } catch (err) {
       isFinished = true;
       if (showSpinnerTimer) clearTimeout(showSpinnerTimer);
+      setHasError(true);
       console.error("Submission error:", err);
       alert("Registration failed. Please try again.");
     } finally {
@@ -175,9 +222,9 @@ export function RegistrationFormSection() {
   // Animation variants
   const variants = {
     enter: (dir: number) => ({
-      x: dir > 0 ? 40 : -40,
+      x: dir > 0 ? 30 : -30,
       opacity: 0,
-      scale: 0.98,
+      scale: 0.96,
     }),
     center: {
       x: 0,
@@ -185,38 +232,37 @@ export function RegistrationFormSection() {
       scale: 1,
     },
     exit: (dir: number) => ({
-      x: dir < 0 ? 40 : -40,
+      x: dir < 0 ? 30 : -30,
       opacity: 0,
-      scale: 0.98,
+      scale: 0.96,
     }),
   };
 
   return (
     <section className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-[#F8FAF8] relative overflow-hidden" id="register">
-      <div className="max-w-3xl mx-auto relative z-10">
-        {/* Header Section Badge */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 rounded-full bg-[#1F6F50]/10 px-4 py-1.5 border border-[#1F6F50]/20 text-xs font-mono font-bold uppercase tracking-widest text-[#1F6F50] shadow-sm">
-            <Flame className="h-4 w-4 text-[#34A853]" />
-            <span>Fast 1-Minute Registration</span>
-          </div>
-        </div>
+      {/* Organic Background Motion Elements */}
+      <div className="absolute top-10 left-1/4 w-96 h-96 bg-[#22C55E]/10 rounded-full blur-[120px] pointer-events-none animate-pulse" />
+      <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-[#3B82F6]/10 rounded-full blur-[120px] pointer-events-none animate-pulse" />
 
-        {/* Main Card Container */}
-        <div className="w-full rounded-3xl bg-white border border-[#E5E7EB] p-6 sm:p-10 shadow-xl relative min-h-[500px] flex flex-col justify-between">
+      <div className="max-w-2xl mx-auto relative z-10">
+        {/* Registration Card Container (Glassmorphism + 32px rounded corners) */}
+        <div className="w-full rounded-[32px] bg-white/90 border border-[#22C55E]/20 p-6 sm:p-10 shadow-[0_20px_60px_rgba(34,197,94,0.08)] backdrop-blur-xl relative min-h-[560px] flex flex-col justify-between">
           {!submitted ? (
             <>
-              {/* Progress Indicator Header */}
-              <div className="mb-6 space-y-3">
+              {/* Progress Bar & Header */}
+              <div className="mb-4 space-y-2">
                 <div className="flex items-center justify-between text-xs font-mono font-bold uppercase tracking-wider">
-                  <span className="text-[#1F6F50]">Step {currentStep} of {TOTAL_STEPS}</span>
-                  <span className="text-[#6B7280]">{progressPercentage}% Complete</span>
+                  <span className="text-[#15803D] flex items-center gap-1.5">
+                    <Sparkles className="h-3.5 w-3.5 text-[#22C55E]" />
+                    <span>Step {currentStep} of {TOTAL_STEPS}</span>
+                  </span>
+                  <span className="text-[#64748B]">{progressPercentage}% Complete</span>
                 </div>
 
-                {/* Progress Bar */}
-                <div className="w-full h-2 rounded-full bg-[#E5E7EB] overflow-hidden">
+                {/* Animated Progress Bar */}
+                <div className="w-full h-2.5 rounded-full bg-[#E2E8F0] overflow-hidden">
                   <motion.div
-                    className="h-full bg-gradient-to-r from-[#1F6F50] to-[#34A853] rounded-full"
+                    className="h-full bg-gradient-to-r from-[#15803D] to-[#22C55E] rounded-full shadow-xs"
                     initial={{ width: "0%" }}
                     animate={{ width: `${progressPercentage}%` }}
                     transition={{ duration: 0.35, ease: "easeOut" }}
@@ -224,11 +270,22 @@ export function RegistrationFormSection() {
                 </div>
               </div>
 
+              {/* Anime Mascot Assistant Section (Centered above question) */}
+              <div className="py-2 flex flex-col items-center justify-center">
+                <MascotAvatar
+                  pose={getMascotPose()}
+                  step={currentStep}
+                  isTyping={isTyping}
+                  hasError={hasError}
+                  isSuccess={submitted}
+                />
+              </div>
+
               {/* Form Content / Cards */}
               <form onSubmit={handleSubmit(onSubmit)} onKeyDown={handleKeyDown} className="flex-1 flex flex-col justify-between">
                 <div className="relative overflow-hidden py-2 my-auto">
                   <AnimatePresence custom={direction} mode="wait">
-                    {/* CARD 1: Full Name */}
+                    {/* STEP 1: Full Name 👋 */}
                     {currentStep === 1 && (
                       <motion.div
                         key="step1"
@@ -237,27 +294,32 @@ export function RegistrationFormSection() {
                         initial="enter"
                         animate="center"
                         exit="exit"
-                        transition={{ duration: 0.35, ease: "easeInOut" }}
-                        className="space-y-5"
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="space-y-4 text-center"
                       >
                         <div>
-                          <h3 className="font-headline-lg text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-[#1F2937] tracking-tight leading-tight">
-                            Welcome! What&apos;s your <span className="text-[#1F6F50]">full name?</span>
+                          <h3 className="font-headline-lg text-2xl sm:text-3xl font-black uppercase text-[#0F172A] tracking-tight leading-tight">
+                            Hi there! What&apos;s your <span className="text-[#22C55E]">full name?</span>
                           </h3>
-                          <p className="text-sm text-[#6B7280] mt-2">
-                            We&apos;ll use this to personalize your experience & membership pass.
+                          <p className="text-xs sm:text-sm text-[#64748B] mt-1.5 max-w-md mx-auto">
+                            I&apos;m Ren, your fitness mascot! Let&apos;s personalize your membership pass.
                           </p>
                         </div>
 
-                        <div className="pt-2">
+                        <div className="pt-2 max-w-md mx-auto relative">
+                          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#22C55E]">
+                            <User className="h-5 w-5" />
+                          </div>
                           <input
                             {...register("fullName")}
                             ref={(e) => {
                               register("fullName").ref(e);
                               inputRef.current = e;
                             }}
+                            onFocus={() => setIsTyping(true)}
+                            onBlur={() => setIsTyping(false)}
                             placeholder="John Doe"
-                            className="w-full h-14 rounded-2xl bg-white border border-[#E5E7EB] px-5 text-base sm:text-lg text-[#1F2937] placeholder-neutral-400 focus:border-[#34A853] focus:ring-2 focus:ring-[#34A853]/20 focus:outline-none transition-all shadow-xs"
+                            className="w-full h-14 rounded-2xl bg-white border border-[#E2E8F0] pl-12 pr-5 text-base sm:text-lg text-[#0F172A] placeholder-slate-400 focus:border-[#22C55E] focus:ring-4 focus:ring-[#22C55E]/15 focus:outline-none transition-all shadow-xs"
                           />
                           {errors.fullName && (
                             <p className="text-xs text-red-500 mt-2 font-medium">{errors.fullName.message}</p>
@@ -266,7 +328,7 @@ export function RegistrationFormSection() {
                       </motion.div>
                     )}
 
-                    {/* CARD 2: Mobile Number */}
+                    {/* STEP 2: Mobile Number 📱 */}
                     {currentStep === 2 && (
                       <motion.div
                         key="step2"
@@ -275,28 +337,33 @@ export function RegistrationFormSection() {
                         initial="enter"
                         animate="center"
                         exit="exit"
-                        transition={{ duration: 0.35, ease: "easeInOut" }}
-                        className="space-y-5"
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="space-y-4 text-center"
                       >
                         <div>
-                          <h3 className="font-headline-lg text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-[#1F2937] tracking-tight leading-tight">
-                            What&apos;s your <span className="text-[#1F6F50]">mobile number?</span>
+                          <h3 className="font-headline-lg text-2xl sm:text-3xl font-black uppercase text-[#0F172A] tracking-tight leading-tight">
+                            Great! What&apos;s your <span className="text-[#22C55E]">mobile number?</span>
                           </h3>
-                          <p className="text-sm text-[#6B7280] mt-2">
-                            Our fitness advisor will contact you within 30 minutes to confirm your visit.
+                          <p className="text-xs sm:text-sm text-[#64748B] mt-1.5 max-w-md mx-auto">
+                            Our team will call or WhatsApp you within 30 mins to confirm your pass.
                           </p>
                         </div>
 
-                        <div className="pt-2">
+                        <div className="pt-2 max-w-md mx-auto relative">
+                          <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#22C55E]">
+                            <Smartphone className="h-5 w-5" />
+                          </div>
                           <input
                             {...register("mobile")}
                             ref={(e) => {
                               register("mobile").ref(e);
                               inputRef.current = e;
                             }}
+                            onFocus={() => setIsTyping(true)}
+                            onBlur={() => setIsTyping(false)}
                             type="tel"
                             placeholder="+91 98765 43210"
-                            className="w-full h-14 rounded-2xl bg-white border border-[#E5E7EB] px-5 text-base sm:text-lg text-[#1F2937] placeholder-neutral-400 focus:border-[#34A853] focus:ring-2 focus:ring-[#34A853]/20 focus:outline-none transition-all font-mono shadow-xs"
+                            className="w-full h-14 rounded-2xl bg-white border border-[#E2E8F0] pl-12 pr-5 text-base sm:text-lg text-[#0F172A] placeholder-slate-400 focus:border-[#22C55E] focus:ring-4 focus:ring-[#22C55E]/15 focus:outline-none transition-all font-mono shadow-xs"
                           />
                           {errors.mobile && (
                             <p className="text-xs text-red-500 mt-2 font-medium">{errors.mobile.message}</p>
@@ -305,7 +372,7 @@ export function RegistrationFormSection() {
                       </motion.div>
                     )}
 
-                    {/* CARD 3: Age */}
+                    {/* STEP 3: Age Group 🎂 */}
                     {currentStep === 3 && (
                       <motion.div
                         key="step3"
@@ -314,19 +381,19 @@ export function RegistrationFormSection() {
                         initial="enter"
                         animate="center"
                         exit="exit"
-                        transition={{ duration: 0.35, ease: "easeInOut" }}
-                        className="space-y-5"
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="space-y-4 text-center"
                       >
                         <div>
-                          <h3 className="font-headline-lg text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-[#1F2937] tracking-tight leading-tight">
-                            What&apos;s your <span className="text-[#1F6F50]">age group?</span>
+                          <h3 className="font-headline-lg text-2xl sm:text-3xl font-black uppercase text-[#0F172A] tracking-tight leading-tight">
+                            Select your <span className="text-[#22C55E]">age group</span>
                           </h3>
-                          <p className="text-sm text-[#6B7280] mt-2">
-                            Helps us tailor your workout intensity and safety guidelines.
+                          <p className="text-xs sm:text-sm text-[#64748B] mt-1.5 max-w-md mx-auto">
+                            Helps us customize workout intensity & safety guidelines.
                           </p>
                         </div>
 
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2 max-w-md mx-auto">
                           {[
                             { label: "Under 18", val: "under_18" },
                             { label: "18 - 25 Years", val: "18_25" },
@@ -340,10 +407,10 @@ export function RegistrationFormSection() {
                                 type="button"
                                 key={item.val}
                                 onClick={() => setValue("age", item.val, { shouldValidate: true })}
-                                className={`p-4 rounded-2xl border text-sm font-bold text-center transition-all cursor-pointer ${
+                                className={`p-3.5 rounded-2xl border text-xs sm:text-sm font-bold text-center transition-all cursor-pointer ${
                                   isSelected
-                                    ? "bg-[#1F6F50] border-[#1F6F50] text-white shadow-md scale-[1.02]"
-                                    : "bg-white border-[#E5E7EB] text-[#1F2937] hover:border-[#34A853]"
+                                    ? "bg-[#22C55E] border-[#22C55E] text-white shadow-md scale-[1.02]"
+                                    : "bg-white border-[#E2E8F0] text-[#0F172A] hover:border-[#22C55E]"
                                 }`}
                               >
                                 {item.label}
@@ -354,7 +421,7 @@ export function RegistrationFormSection() {
                       </motion.div>
                     )}
 
-                    {/* CARD 4: Gender */}
+                    {/* STEP 4: Gender 📏 */}
                     {currentStep === 4 && (
                       <motion.div
                         key="step4"
@@ -363,19 +430,19 @@ export function RegistrationFormSection() {
                         initial="enter"
                         animate="center"
                         exit="exit"
-                        transition={{ duration: 0.35, ease: "easeInOut" }}
-                        className="space-y-5"
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="space-y-4 text-center"
                       >
                         <div>
-                          <h3 className="font-headline-lg text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-[#1F2937] tracking-tight leading-tight">
-                            Select your <span className="text-[#1F6F50]">gender</span>
+                          <h3 className="font-headline-lg text-2xl sm:text-3xl font-black uppercase text-[#0F172A] tracking-tight leading-tight">
+                            Select your <span className="text-[#22C55E]">gender</span>
                           </h3>
-                          <p className="text-sm text-[#6B7280] mt-2">
-                            Used for customized training recommendations and facility access.
+                          <p className="text-xs sm:text-sm text-[#64748B] mt-1.5 max-w-md mx-auto">
+                            Used for locker room access & specialized training routines.
                           </p>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 max-w-md mx-auto">
                           {[
                             { label: "Male", val: "male", icon: "🏃‍♂️" },
                             { label: "Female", val: "female", icon: "🏃‍♀️" },
@@ -390,22 +457,22 @@ export function RegistrationFormSection() {
                                   setValue("gender", item.val, { shouldValidate: true });
                                   handleNextStep();
                                 }}
-                                className={`p-5 rounded-2xl border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                className={`p-4 rounded-2xl border text-left flex items-center justify-between transition-all cursor-pointer ${
                                   isSelected
-                                    ? "bg-[#1F6F50]/10 border-[#1F6F50] text-[#1F6F50] shadow-md scale-[1.02]"
-                                    : "bg-white border-[#E5E7EB] text-[#1F2937] hover:border-[#34A853]"
+                                    ? "bg-[#22C55E]/10 border-[#22C55E] text-[#15803D] shadow-md scale-[1.02]"
+                                    : "bg-white border-[#E2E8F0] text-[#0F172A] hover:border-[#22C55E]"
                                 }`}
                               >
-                                <div className="flex items-center gap-3">
-                                  <span className="text-2xl">{item.icon}</span>
-                                  <span className="font-bold text-base uppercase tracking-wide">{item.label}</span>
+                                <div className="flex items-center gap-2.5">
+                                  <span className="text-xl">{item.icon}</span>
+                                  <span className="font-bold text-sm uppercase">{item.label}</span>
                                 </div>
                                 <div
-                                  className={`h-5 w-5 rounded-full border flex items-center justify-center ${
-                                    isSelected ? "border-[#34A853] bg-[#34A853]" : "border-neutral-300"
+                                  className={`h-4 w-4 rounded-full border flex items-center justify-center ${
+                                    isSelected ? "border-[#22C55E] bg-[#22C55E]" : "border-slate-300"
                                   }`}
                                 >
-                                  {isSelected && <CheckCircle2 className="h-3.5 w-3.5 text-white" />}
+                                  {isSelected && <CheckCircle2 className="h-3 w-3 text-white" />}
                                 </div>
                               </button>
                             );
@@ -414,7 +481,7 @@ export function RegistrationFormSection() {
                       </motion.div>
                     )}
 
-                    {/* CARD 5: Fitness Goal */}
+                    {/* STEP 5: Fitness Goal 💪 */}
                     {currentStep === 5 && (
                       <motion.div
                         key="step5"
@@ -423,26 +490,24 @@ export function RegistrationFormSection() {
                         initial="enter"
                         animate="center"
                         exit="exit"
-                        transition={{ duration: 0.35, ease: "easeInOut" }}
-                        className="space-y-5"
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="space-y-4 text-center"
                       >
                         <div>
-                          <h3 className="font-headline-lg text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-[#1F2937] tracking-tight leading-tight">
-                            What&apos;s your primary <span className="text-[#1F6F50]">fitness goal?</span>
+                          <h3 className="font-headline-lg text-2xl sm:text-3xl font-black uppercase text-[#0F172A] tracking-tight leading-tight">
+                            What&apos;s your main <span className="text-[#22C55E]">fitness goal?</span>
                           </h3>
-                          <p className="text-sm text-[#6B7280] mt-2">
-                            Select the main objective you want to achieve with Youth Gym Reloaded.
+                          <p className="text-xs sm:text-sm text-[#64748B] mt-1.5 max-w-md mx-auto">
+                            Choose what you want to achieve at Youth Gym Reloaded.
                           </p>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                        <div className="grid grid-cols-2 gap-3 pt-2 max-w-md mx-auto">
                           {[
-                            { label: "Weight Loss", desc: "Burn fat & get lean", val: "weight_loss", icon: Flame },
-                            { label: "Muscle Gain", desc: "Build mass & strength", val: "muscle_gain", icon: Dumbbell },
-                            { label: "Strength Training", desc: "Heavy lifting & power", val: "strength", icon: Zap },
-                            { label: "Cardio & Stamina", desc: "Heart health & endurance", val: "endurance", icon: HeartPulse },
-                            { label: "General Fitness", desc: "Overall tone & energy", val: "general", icon: Target },
-                            { label: "Personal Training", desc: "1-on-1 expert coaching", val: "personal_training", icon: Crown },
+                            { label: "Weight Loss", desc: "Burn fat & lean out", val: "weight_loss", icon: Flame },
+                            { label: "Muscle Gain", desc: "Build size & power", val: "muscle_gain", icon: Dumbbell },
+                            { label: "Strength", desc: "Heavy powerlifting", val: "strength", icon: Zap },
+                            { label: "General Fitness", desc: "Overall health", val: "general", icon: Target },
                           ].map((item) => {
                             const Icon = item.icon;
                             const isSelected = formValues.fitnessGoal === item.val;
@@ -453,18 +518,18 @@ export function RegistrationFormSection() {
                                 onClick={() => {
                                   setValue("fitnessGoal", item.val, { shouldValidate: true });
                                 }}
-                                className={`p-4 rounded-2xl border text-left flex items-center gap-3 transition-all cursor-pointer ${
+                                className={`p-3.5 rounded-2xl border text-left flex items-center gap-2.5 transition-all cursor-pointer ${
                                   isSelected
-                                    ? "bg-[#1F6F50]/10 border-[#1F6F50] text-[#1F6F50] shadow-md scale-[1.01]"
-                                    : "bg-white border-[#E5E7EB] text-[#1F2937] hover:border-[#34A853]"
+                                    ? "bg-[#22C55E]/10 border-[#22C55E] text-[#15803D] shadow-md scale-[1.02]"
+                                    : "bg-white border-[#E2E8F0] text-[#0F172A] hover:border-[#22C55E]"
                                 }`}
                               >
-                                <div className={`h-10 w-10 rounded-xl flex items-center justify-center shrink-0 ${isSelected ? "bg-[#34A853] text-white" : "bg-[#F8FAF8] text-[#1F6F50]"}`}>
-                                  <Icon className="h-5 w-5" />
+                                <div className={`h-9 w-9 rounded-xl flex items-center justify-center shrink-0 ${isSelected ? "bg-[#22C55E] text-white" : "bg-[#F1F5F9] text-[#22C55E]"}`}>
+                                  <Icon className="h-4 w-4" />
                                 </div>
-                                <div>
-                                  <div className="font-bold text-sm uppercase text-[#1F2937] tracking-wide">{item.label}</div>
-                                  <div className="text-[11px] text-[#6B7280]">{item.desc}</div>
+                                <div className="truncate">
+                                  <div className="font-bold text-xs uppercase text-[#0F172A] truncate">{item.label}</div>
+                                  <div className="text-[10px] text-[#64748B] truncate">{item.desc}</div>
                                 </div>
                               </button>
                             );
@@ -473,7 +538,7 @@ export function RegistrationFormSection() {
                       </motion.div>
                     )}
 
-                    {/* CARD 6: Preferred Workout Time */}
+                    {/* STEP 6: Preferred Workout Time 🔥 */}
                     {currentStep === 6 && (
                       <motion.div
                         key="step6"
@@ -482,24 +547,24 @@ export function RegistrationFormSection() {
                         initial="enter"
                         animate="center"
                         exit="exit"
-                        transition={{ duration: 0.35, ease: "easeInOut" }}
-                        className="space-y-5"
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="space-y-4 text-center"
                       >
                         <div>
-                          <h3 className="font-headline-lg text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-[#1F2937] tracking-tight leading-tight">
-                            When do you prefer to <span className="text-[#1F6F50]">work out?</span>
+                          <h3 className="font-headline-lg text-2xl sm:text-3xl font-black uppercase text-[#0F172A] tracking-tight leading-tight">
+                            When do you prefer to <span className="text-[#22C55E]">work out?</span>
                           </h3>
-                          <p className="text-sm text-[#6B7280] mt-2">
-                            Select your preferred time slot for training.
+                          <p className="text-xs sm:text-sm text-[#64748B] mt-1.5 max-w-md mx-auto">
+                            Pick your favorite training time slot.
                           </p>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                        <div className="grid grid-cols-2 gap-3 pt-2 max-w-md mx-auto">
                           {[
-                            { label: "Morning", timing: "5:00 AM - 10:00 AM", val: "morning", icon: Sunrise },
-                            { label: "Afternoon", timing: "10:00 AM - 4:00 PM", val: "afternoon", icon: Sun },
-                            { label: "Evening", timing: "4:00 PM - 11:00 PM", val: "evening", icon: Moon },
-                            { label: "Flexible Timing", timing: "Anytime", val: "flexible", icon: Clock },
+                            { label: "Morning", timing: "5AM - 10AM", val: "morning", icon: Sunrise },
+                            { label: "Afternoon", timing: "10AM - 4PM", val: "afternoon", icon: Sun },
+                            { label: "Evening", timing: "4PM - 11PM", val: "evening", icon: Moon },
+                            { label: "Flexible", timing: "Anytime", val: "flexible", icon: Clock },
                           ].map((item) => {
                             const Icon = item.icon;
                             const isSelected = formValues.preferredTime === item.val;
@@ -510,18 +575,18 @@ export function RegistrationFormSection() {
                                 onClick={() => {
                                   setValue("preferredTime", item.val, { shouldValidate: true });
                                 }}
-                                className={`p-5 rounded-2xl border text-left flex items-center gap-4 transition-all cursor-pointer ${
+                                className={`p-4 rounded-2xl border text-left flex items-center gap-3 transition-all cursor-pointer ${
                                   isSelected
-                                    ? "bg-[#1F6F50]/10 border-[#1F6F50] text-[#1F6F50] shadow-md scale-[1.01]"
-                                    : "bg-white border-[#E5E7EB] text-[#1F2937] hover:border-[#34A853]"
+                                    ? "bg-[#22C55E]/10 border-[#22C55E] text-[#15803D] shadow-md scale-[1.02]"
+                                    : "bg-white border-[#E2E8F0] text-[#0F172A] hover:border-[#22C55E]"
                                 }`}
                               >
-                                <div className={`h-12 w-12 rounded-xl flex items-center justify-center shrink-0 ${isSelected ? "bg-[#34A853] text-white" : "bg-[#F8FAF8] text-[#1F6F50]"}`}>
-                                  <Icon className="h-6 w-6" />
+                                <div className={`h-10 w-10 rounded-xl flex items-center justify-center shrink-0 ${isSelected ? "bg-[#22C55E] text-white" : "bg-[#F1F5F9] text-[#22C55E]"}`}>
+                                  <Icon className="h-5 w-5" />
                                 </div>
                                 <div>
-                                  <div className="font-bold text-base uppercase text-[#1F2937] tracking-wide">{item.label}</div>
-                                  <div className="text-xs text-[#6B7280] font-mono mt-0.5">{item.timing}</div>
+                                  <div className="font-bold text-xs uppercase text-[#0F172A]">{item.label}</div>
+                                  <div className="text-[10px] text-[#64748B] font-mono">{item.timing}</div>
                                 </div>
                               </button>
                             );
@@ -530,7 +595,7 @@ export function RegistrationFormSection() {
                       </motion.div>
                     )}
 
-                    {/* CARD 7: Membership Plan */}
+                    {/* STEP 7: Membership Plan 👉 */}
                     {currentStep === 7 && (
                       <motion.div
                         key="step7"
@@ -539,24 +604,24 @@ export function RegistrationFormSection() {
                         initial="enter"
                         animate="center"
                         exit="exit"
-                        transition={{ duration: 0.35, ease: "easeInOut" }}
-                        className="space-y-5"
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="space-y-4 text-center"
                       >
                         <div>
-                          <h3 className="font-headline-lg text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-[#1F2937] tracking-tight leading-tight">
-                            Which membership are you <span className="text-[#1F6F50]">interested in?</span>
+                          <h3 className="font-headline-lg text-2xl sm:text-3xl font-black uppercase text-[#0F172A] tracking-tight leading-tight">
+                            Which plan fits your <span className="text-[#22C55E]">budget?</span>
                           </h3>
-                          <p className="text-sm text-[#6B7280] mt-2">
-                            Select a plan to lock in your pass & special registration offer.
+                          <p className="text-xs sm:text-sm text-[#64748B] mt-1.5 max-w-md mx-auto">
+                            Lock in your special registration offer.
                           </p>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                        <div className="grid grid-cols-2 gap-3 pt-2 max-w-md mx-auto">
                           {[
-                            { label: "Monthly", price: "₹800/mo", sub: "+ ₹500 Registration", badge: null, val: "1_month" },
-                            { label: "3 Months", price: "₹2200 Total", sub: "Registration FREE", badge: "Most Popular ⭐", val: "3_months" },
-                            { label: "6 Months", price: "₹4000 Total", sub: "Registration FREE", badge: "Best Value ⭐", val: "6_months" },
-                            { label: "1 Year", price: "₹6000 Total", sub: "Registration FREE", badge: "Best Deal 👑", val: "12_months" },
+                            { label: "Monthly", price: "₹800/mo", sub: "+ Registration Fee", val: "1_month" },
+                            { label: "3 Months", price: "₹2200 Total", sub: "Reg. FREE ⭐", val: "3_months" },
+                            { label: "6 Months", price: "₹4000 Total", sub: "Reg. FREE ⭐", val: "6_months" },
+                            { label: "1 Year", price: "₹6000 Total", sub: "Reg. FREE 👑", val: "12_months" },
                           ].map((item) => {
                             const isSelected = formValues.membershipPlan === item.val;
                             return (
@@ -566,20 +631,15 @@ export function RegistrationFormSection() {
                                 onClick={() => {
                                   setValue("membershipPlan", item.val, { shouldValidate: true });
                                 }}
-                                className={`p-5 rounded-2xl border text-left relative transition-all cursor-pointer ${
+                                className={`p-4 rounded-2xl border text-left transition-all cursor-pointer ${
                                   isSelected
-                                    ? "bg-[#1F6F50]/10 border-[#1F6F50] text-[#1F6F50] shadow-md scale-[1.02]"
-                                    : "bg-white border-[#E5E7EB] text-[#1F2937] hover:border-[#34A853]"
+                                    ? "bg-[#22C55E]/10 border-[#22C55E] text-[#15803D] shadow-md scale-[1.02]"
+                                    : "bg-white border-[#E2E8F0] text-[#0F172A] hover:border-[#22C55E]"
                                 }`}
                               >
-                                {item.badge && (
-                                  <span className="absolute -top-2.5 right-4 bg-[#F59E0B] text-white text-[10px] font-mono font-black uppercase px-2.5 py-0.5 rounded-full shadow-xs">
-                                    {item.badge}
-                                  </span>
-                                )}
-                                <div className="font-headline-lg text-lg font-black uppercase text-[#1F2937] tracking-wide">{item.label}</div>
-                                <div className="text-xl font-extrabold text-[#1F6F50] mt-1">{item.price}</div>
-                                <div className="text-xs text-[#6B7280] font-mono mt-1">{item.sub}</div>
+                                <div className="font-bold text-xs uppercase text-[#0F172A]">{item.label}</div>
+                                <div className="text-base font-black text-[#22C55E] mt-0.5">{item.price}</div>
+                                <div className="text-[10px] text-[#64748B] font-mono mt-0.5">{item.sub}</div>
                               </button>
                             );
                           })}
@@ -587,7 +647,7 @@ export function RegistrationFormSection() {
                       </motion.div>
                     )}
 
-                    {/* CARD 8: Final Step & Confirmation */}
+                    {/* STEP 8: Final Step 🎉 */}
                     {currentStep === 8 && (
                       <motion.div
                         key="step8"
@@ -596,47 +656,46 @@ export function RegistrationFormSection() {
                         initial="enter"
                         animate="center"
                         exit="exit"
-                        transition={{ duration: 0.35, ease: "easeInOut" }}
-                        className="space-y-5"
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="space-y-4 text-center"
                       >
                         <div>
-                          <h3 className="font-headline-lg text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-[#1F2937] tracking-tight leading-tight">
-                            Almost done! <span className="text-[#1F6F50]">Submit your registration</span>
+                          <h3 className="font-headline-lg text-2xl sm:text-3xl font-black uppercase text-[#0F172A] tracking-tight leading-tight">
+                            Almost done! <span className="text-[#22C55E]">Confirm your pass</span>
                           </h3>
-                          <p className="text-sm text-[#6B7280] mt-2">
+                          <p className="text-xs sm:text-sm text-[#64748B] mt-1.5 max-w-md mx-auto">
                             Provide an optional email for your digital membership pass & confirmation.
                           </p>
                         </div>
 
-                        <div className="space-y-4 pt-2">
+                        <div className="space-y-3 pt-2 max-w-md mx-auto">
                           <div>
-                            <label className="block text-xs font-mono uppercase text-[#6B7280] mb-1.5 font-semibold">
-                              Email Address (Optional)
-                            </label>
                             <input
                               {...register("email")}
                               ref={(e) => {
                                 register("email").ref(e);
                                 inputRef.current = e;
                               }}
+                              onFocus={() => setIsTyping(true)}
+                              onBlur={() => setIsTyping(false)}
                               type="email"
-                              placeholder="john@example.com"
-                              className="w-full h-14 rounded-2xl bg-white border border-[#E5E7EB] px-5 text-base text-[#1F2937] placeholder-neutral-400 focus:border-[#34A853] focus:ring-2 focus:ring-[#34A853]/20 focus:outline-none transition-all shadow-xs"
+                              placeholder="john@example.com (Optional)"
+                              className="w-full h-14 rounded-2xl bg-white border border-[#E2E8F0] px-5 text-sm text-[#0F172A] placeholder-slate-400 focus:border-[#22C55E] focus:ring-4 focus:ring-[#22C55E]/15 focus:outline-none transition-all shadow-xs"
                             />
                             {errors.email && (
                               <p className="text-xs text-red-500 mt-1">{errors.email.message}</p>
                             )}
                           </div>
 
-                          <div className="pt-2">
-                            <label className="flex items-start gap-3 cursor-pointer text-xs sm:text-sm text-[#1F2937]">
+                          <div className="pt-1 text-left">
+                            <label className="flex items-start gap-2.5 cursor-pointer text-xs text-[#0F172A]">
                               <input
                                 type="checkbox"
                                 {...register("agreeToTerms")}
-                                className="mt-1 rounded border-neutral-300 bg-white text-[#34A853] focus:ring-[#34A853] h-4 w-4"
+                                className="mt-0.5 rounded border-slate-300 bg-white text-[#22C55E] focus:ring-[#22C55E] h-4 w-4"
                               />
-                              <span className="leading-relaxed">
-                                I agree to be contacted regarding my membership enquiry.
+                              <span className="leading-snug">
+                                I agree to be contacted regarding my gym visit & membership.
                               </span>
                             </label>
                             {errors.agreeToTerms && (
@@ -650,12 +709,12 @@ export function RegistrationFormSection() {
                 </div>
 
                 {/* Footer Controls (Back & Continue / Submit Buttons) */}
-                <div className="pt-8 border-t border-[#E5E7EB] flex items-center justify-between gap-4 mt-6">
+                <div className="pt-6 border-t border-[#E2E8F0] flex items-center justify-between gap-4 mt-4">
                   {currentStep > 1 ? (
                     <button
                       type="button"
                       onClick={handlePrevStep}
-                      className="px-5 py-3 rounded-full border border-[#E5E7EB] text-[#1F2937] hover:border-[#1F6F50] hover:text-[#1F6F50] text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer"
+                      className="px-5 py-3 rounded-full border border-[#E2E8F0] text-[#0F172A] hover:border-[#22C55E] hover:text-[#15803D] text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer"
                     >
                       <ArrowLeft className="h-4 w-4" />
                       <span>Back</span>
@@ -665,59 +724,61 @@ export function RegistrationFormSection() {
                   )}
 
                   {currentStep < TOTAL_STEPS ? (
-                    <button
+                    <motion.button
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
                       type="button"
                       onClick={handleNextStep}
-                      className="px-8 py-3.5 rounded-full bg-[#34A853] text-white text-xs font-black uppercase tracking-widest hover:bg-[#2E9548] hover:scale-105 transition-all shadow-md flex items-center gap-2 cursor-pointer"
+                      className="px-8 py-3.5 rounded-full bg-[#22C55E] text-white text-xs font-black uppercase tracking-widest hover:bg-[#16A34A] transition-all shadow-md flex items-center gap-2 cursor-pointer"
                     >
                       <span>Continue</span>
                       <ArrowRight className="h-4 w-4" />
-                    </button>
+                    </motion.button>
                   ) : (
-                    <button
+                    <motion.button
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
                       type="submit"
                       disabled={loading}
-                      className="px-8 py-4 rounded-full bg-[#34A853] text-white text-xs font-black uppercase tracking-widest hover:bg-[#2E9548] hover:scale-105 transition-all shadow-lg flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                      className="px-8 py-4 rounded-full bg-[#22C55E] text-white text-xs font-black uppercase tracking-widest hover:bg-[#16A34A] transition-all shadow-lg flex items-center gap-2 cursor-pointer disabled:opacity-50"
                     >
                       <span>{loading ? "SUBMITTING..." : "SUBMIT REGISTRATION"}</span>
                       <ArrowRight className="h-4 w-4" />
-                    </button>
+                    </motion.button>
                   )}
                 </div>
               </form>
             </>
           ) : (
-            /* SUCCESS SCREEN */
+            /* SUCCESS SCREEN 🎉 */
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4 }}
-              className="py-12 text-center flex flex-col items-center justify-center space-y-6 my-auto"
+              className="py-8 text-center flex flex-col items-center justify-center space-y-5 my-auto"
             >
-              <div className="h-24 w-24 rounded-full bg-[#34A853]/15 text-[#34A853] flex items-center justify-center shadow-md animate-bounce">
-                <CheckCircle2 className="h-12 w-12" />
-              </div>
+              <MascotAvatar pose="celebrate" isSuccess={true} />
 
               <div>
-                <h4 className="font-headline-lg text-3xl sm:text-4xl font-black uppercase text-[#1F2937] tracking-tight">
-                  🎉 Registration <span className="text-[#1F6F50]">Submitted Successfully!</span>
+                <h4 className="font-headline-lg text-2xl sm:text-3xl font-black uppercase text-[#0F172A] tracking-tight">
+                  🎉 Registration <span className="text-[#22C55E]">Submitted Successfully!</span>
                 </h4>
                 {regId && (
-                  <div className="inline-block mt-3 bg-[#F8FAF8] border border-[#1F6F50]/30 px-5 py-2 rounded-full text-xs font-mono font-bold text-[#1F6F50] shadow-xs">
+                  <div className="inline-block mt-2 bg-[#22C55E]/10 border border-[#22C55E]/30 px-4 py-1.5 rounded-full text-xs font-mono font-bold text-[#15803D] shadow-xs">
                     PASS ID: {regId}
                   </div>
                 )}
               </div>
 
-              <p className="text-sm sm:text-base text-[#6B7280] max-w-md leading-relaxed">
-                Thank you for your interest! Our certified fitness team will contact you shortly to help you begin your fitness journey.
+              <p className="text-xs sm:text-sm text-[#64748B] max-w-md leading-relaxed">
+                Thank you! Ren and our fitness advisors will contact you within 30 minutes to confirm your visit.
               </p>
 
               {/* Action Buttons */}
-              <div className="pt-4 flex flex-col sm:flex-row items-center gap-4 w-full max-w-md">
+              <div className="pt-2 flex flex-col sm:flex-row items-center gap-3 w-full max-w-md">
                 <a
                   href="tel:+917074975231"
-                  className="w-full sm:flex-1 py-3.5 bg-[#34A853] text-white font-bold text-xs uppercase tracking-widest rounded-full hover:bg-[#2E9548] transition-all flex items-center justify-center gap-2 shadow-md"
+                  className="w-full sm:flex-1 py-3.5 bg-[#22C55E] text-white font-bold text-xs uppercase tracking-widest rounded-full hover:bg-[#16A34A] transition-all flex items-center justify-center gap-2 shadow-md"
                 >
                   <Phone className="h-4 w-4" />
                   <span>Call Now</span>
@@ -741,7 +802,7 @@ export function RegistrationFormSection() {
                   setCurrentStep(1);
                   reset();
                 }}
-                className="text-xs text-[#1F6F50] font-bold uppercase underline pt-4 cursor-pointer hover:text-[#34A853] transition-colors flex items-center gap-1.5"
+                className="text-xs text-[#15803D] font-bold uppercase underline pt-2 cursor-pointer hover:text-[#22C55E] transition-colors flex items-center gap-1.5"
               >
                 <RotateCcw className="h-3.5 w-3.5" />
                 <span>Register Another Member</span>
