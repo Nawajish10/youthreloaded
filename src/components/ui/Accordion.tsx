@@ -45,17 +45,17 @@ export function Accordion({
         return (
           <div
             key={item.id}
-            className="rounded-[var(--radius-lg)] border border-[var(--color-dark-border)] bg-[var(--color-dark-surface)] overflow-hidden transition-colors"
+            className="rounded-2xl border border-[#E5E7EB] bg-[#F8FAF8] overflow-hidden transition-colors"
           >
             <button
               onClick={() => toggleItem(item.id)}
-              className="flex w-full items-center justify-between p-4 sm:p-5 text-left font-semibold text-white hover:text-[var(--color-primary)] transition-colors focus:outline-none"
+              className="flex w-full items-center justify-between p-4 sm:p-5 text-left font-bold text-[#1F2937] hover:text-[#1F6F50] transition-colors focus:outline-none cursor-pointer"
             >
               <span>{item.title}</span>
               <ChevronDown
                 className={cn(
-                  "h-5 w-5 text-neutral-400 shrink-0 transition-transform duration-300",
-                  isOpen && "rotate-180 text-[var(--color-primary)]"
+                  "h-5 w-5 text-[#6B7280] shrink-0 transition-transform duration-300",
+                  isOpen && "rotate-180 text-[#34A853]"
                 )}
               />
             </button>
@@ -67,7 +67,7 @@ export function Accordion({
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.25, ease: "easeInOut" }}
                 >
-                  <div className="px-4 pb-5 sm:px-5 text-sm text-neutral-400 border-t border-neutral-800/60 pt-3 leading-relaxed">
+                  <div className="px-4 pb-5 sm:px-5 text-sm text-[#6B7280] border-t border-[#E5E7EB] pt-3 leading-relaxed">
                     {item.content}
                   </div>
                 </motion.div>

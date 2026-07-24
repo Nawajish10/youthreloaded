@@ -40,22 +40,22 @@ export function FAQSection() {
   ];
 
   return (
-    <section className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-[#090909] relative" id="faq">
+    <section className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-[#F8FAF8] relative border-b border-[#E5E7EB]" id="faq">
       <div className="max-w-4xl mx-auto">
         <FadeUp>
           {/* Header */}
           <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 rounded-full bg-[#151515] px-4 py-1.5 border border-white/10 text-xs font-mono font-bold uppercase tracking-widest text-[#E50914] mb-3">
-              <HelpCircle className="h-4 w-4 text-[#E50914]" />
+            <div className="inline-flex items-center gap-2 rounded-full bg-[#1F6F50]/10 px-4 py-1.5 border border-[#1F6F50]/20 text-xs font-mono font-bold uppercase tracking-widest text-[#1F6F50] mb-3">
+              <HelpCircle className="h-4 w-4 text-[#34A853]" />
               <span>Frequently Asked Questions</span>
             </div>
-            <h2 className="font-headline-lg text-3xl sm:text-4xl font-black uppercase text-white tracking-tight">
-              Got <span className="text-[#E50914]">Questions?</span> We&apos;ve Got Answers
+            <h2 className="font-headline-lg text-3xl sm:text-4xl font-black uppercase text-[#1F2937] tracking-tight">
+              Got <span className="text-[#1F6F50]">Questions?</span> We&apos;ve Got Answers
             </h2>
           </div>
 
-          {/* Accordion */}
-          <div className="bg-[#111111] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl">
+          {/* Accordion Card */}
+          <div className="bg-white border border-[#E5E7EB] rounded-3xl p-6 sm:p-8 shadow-md">
             <Accordion items={faqs} />
           </div>
         </FadeUp>

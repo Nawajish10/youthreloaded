@@ -25,10 +25,10 @@ const CARDS = [
     headline: (
       <>
         TRANSFORM YOUR BODY. <br />
-        <span className="text-[#E50914]">BUILD YOUR STRENGTH.</span>
+        <span className="text-[#1F6F50]">BUILD YOUR STRENGTH.</span>
       </>
     ),
-    description: "Premium equipment, certified trainers, and personalized workout programs inside a high-end cinematic fitness facility.",
+    description: "Premium equipment, certified trainers, and personalized workout programs inside a bright, high-end fitness facility.",
     bgImage: "/images/cinematic-gym-bg.png",
     primaryCta: { label: "JOIN NOW", href: "#register", icon: ArrowRight },
     secondaryCta: { label: "CALL NOW", href: "tel:+917074975231", icon: Phone },
@@ -41,7 +41,7 @@ const CARDS = [
     headline: (
       <>
         AFFORDABLE MEMBERSHIPS. <br />
-        <span className="text-[#E50914]">PREMIUM EXPERIENCE.</span>
+        <span className="text-[#1F6F50]">PREMIUM EXPERIENCE.</span>
       </>
     ),
     highlights: [
@@ -62,7 +62,7 @@ const CARDS = [
     headline: (
       <>
         STATE-OF-THE-ART <br />
-        <span className="text-[#E50914]">FITNESS FACILITY</span>
+        <span className="text-[#1F6F50]">FITNESS FACILITY</span>
       </>
     ),
     listHighlights: [
@@ -84,7 +84,7 @@ const CARDS = [
     headline: (
       <>
         TRAIN WITH <br />
-        <span className="text-[#E50914]">CERTIFIED COACHES</span>
+        <span className="text-[#1F6F50]">CERTIFIED COACHES</span>
       </>
     ),
     listHighlights: [
@@ -105,7 +105,7 @@ const CARDS = [
     headline: (
       <>
         JOIN A COMMUNITY THAT <br />
-        <span className="text-[#E50914]">KEEPS YOU MOTIVATED</span>
+        <span className="text-[#1F6F50]">KEEPS YOU MOTIVATED</span>
       </>
     ),
     listHighlights: [
@@ -147,21 +147,21 @@ export function Hero() {
   };
 
   return (
-    <section id="hero" className="pt-2 sm:pt-4 pb-8 bg-[#090909] overflow-hidden border-b border-white/10">
+    <section id="hero" className="pt-3 sm:pt-5 pb-8 bg-[#F8FAF8] overflow-hidden border-b border-[#E5E7EB]">
       <div className="max-w-7xl mx-auto space-y-4">
         {/* Swipe Hint Header */}
-        <div className="px-4 sm:px-6 flex items-center justify-between text-xs font-mono font-bold uppercase tracking-widest text-neutral-400">
-          <span className="text-[#E50914] flex items-center gap-1.5">
-            <Flame className="h-3.5 w-3.5 animate-pulse" />
+        <div className="px-4 sm:px-6 flex items-center justify-between text-xs font-mono font-bold uppercase tracking-widest text-[#6B7280]">
+          <span className="text-[#1F6F50] flex items-center gap-1.5 font-bold">
+            <Flame className="h-3.5 w-3.5 text-[#34A853]" />
             <span>FEATURE HIGHLIGHTS</span>
           </span>
-          <span className="flex items-center gap-1 text-neutral-400 animate-pulse">
+          <span className="flex items-center gap-1 text-[#6B7280]">
             <span>Swipe</span>
-            <ChevronRight className="h-3.5 w-3.5 text-[#E50914]" />
+            <ChevronRight className="h-3.5 w-3.5 text-[#34A853]" />
           </span>
         </div>
 
-        {/* Horizontal Swipeable Card Carousel (88vw width on mobile so next card peeks into view) */}
+        {/* Horizontal Swipeable Feature Card Carousel */}
         <div
           ref={scrollContainerRef}
           onScroll={handleScroll}
@@ -172,7 +172,7 @@ export function Hero() {
             return (
               <div
                 key={card.id}
-                className="snap-center shrink-0 w-[88vw] max-w-[360px] sm:w-[420px] lg:w-[460px] h-[480px] sm:h-[510px] rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.85)] border border-white/15 bg-[#121212] relative flex flex-col justify-between p-6 sm:p-7"
+                className="snap-center shrink-0 w-[88vw] max-w-[360px] sm:w-[420px] lg:w-[460px] h-[480px] sm:h-[510px] rounded-3xl overflow-hidden shadow-lg border border-[#E507EB]/20 bg-white relative flex flex-col justify-between p-6 sm:p-7"
               >
                 {/* Single Clean Background Image per Card */}
                 <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -181,30 +181,30 @@ export function Hero() {
                     alt="Youth Gym Feature"
                     fill
                     priority={card.id === 1}
-                    className="object-cover object-center filter brightness-[0.5] contrast-[1.1]"
+                    className="object-cover object-center filter brightness-[0.9] contrast-[1.05]"
                   />
-                  {/* Subtle Dark Vignette (45% darkness) */}
-                  <div className="absolute inset-0 bg-[#090909]/45" />
-                  <div className="absolute inset-0 bg-gradient-to-b from-[#090909]/80 via-transparent to-[#090909]/95" />
+                  {/* Light Soft Gradient for Crisp Text Legibility */}
+                  <div className="absolute inset-0 bg-white/70" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/50 to-white/95" />
                 </div>
 
                 {/* Card Header Tag */}
                 <div className="relative z-10">
-                  <div className="inline-flex items-center gap-2 rounded-full bg-black/70 px-3.5 py-1 border border-white/20 text-[11px] font-mono font-bold uppercase tracking-widest text-[#E50914] backdrop-blur-md shadow-md">
-                    <TagIcon className="h-3.5 w-3.5 text-[#E50914]" />
+                  <div className="inline-flex items-center gap-2 rounded-full bg-[#1F6F50]/10 px-3.5 py-1 border border-[#1F6F50]/20 text-[11px] font-mono font-bold uppercase tracking-widest text-[#1F6F50] backdrop-blur-md shadow-sm">
+                    <TagIcon className="h-3.5 w-3.5 text-[#34A853]" />
                     <span>{card.tag}</span>
                   </div>
                 </div>
 
                 {/* Card Main Typography & Body Content */}
                 <div className="relative z-10 space-y-4 my-auto">
-                  <h2 className="font-headline-lg text-2xl sm:text-3xl font-black uppercase text-white tracking-tight leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
+                  <h2 className="font-headline-lg text-2xl sm:text-3xl font-black uppercase text-[#1F2937] tracking-tight leading-tight">
                     {card.headline}
                   </h2>
 
                   {/* Standard Description */}
                   {card.description && (
-                    <p className="text-xs sm:text-sm text-neutral-200 font-normal leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                    <p className="text-xs sm:text-sm text-[#6B7280] font-normal leading-relaxed">
                       {card.description}
                     </p>
                   )}
@@ -215,15 +215,15 @@ export function Hero() {
                       {card.highlights.map((h) => (
                         <div
                           key={h.label}
-                          className="bg-black/70 border border-white/15 p-2.5 rounded-xl text-center backdrop-blur-md relative"
+                          className="bg-white/90 border border-[#E5E7EB] p-2.5 rounded-xl text-center shadow-sm relative"
                         >
                           {h.badge && (
-                            <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-[#E50914] text-white text-[9px] font-mono font-bold px-2 py-0.5 rounded-full uppercase">
+                            <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-[#F59E0B] text-white text-[9px] font-mono font-bold px-2 py-0.5 rounded-full uppercase shadow-xs">
                               {h.badge}
                             </span>
                           )}
-                          <div className="text-[10px] font-mono font-bold text-neutral-400 uppercase">{h.label}</div>
-                          <div className="text-xs font-black text-[#E50914] mt-0.5">{h.value}</div>
+                          <div className="text-[10px] font-mono font-bold text-[#6B7280] uppercase">{h.label}</div>
+                          <div className="text-xs font-black text-[#1F6F50] mt-0.5">{h.value}</div>
                         </div>
                       ))}
                     </div>
@@ -235,9 +235,9 @@ export function Hero() {
                       {card.listHighlights.map((item) => (
                         <div
                           key={item}
-                          className="flex items-center gap-2 bg-black/60 border border-white/15 px-3 py-1.5 rounded-xl text-xs text-neutral-200 backdrop-blur-md"
+                          className="flex items-center gap-2 bg-white/90 border border-[#E5E7EB] px-3 py-1.5 rounded-xl text-xs text-[#1F2937] shadow-xs"
                         >
-                          <CheckCircle2 className="h-3.5 w-3.5 text-[#E50914] shrink-0" />
+                          <CheckCircle2 className="h-3.5 w-3.5 text-[#34A853] shrink-0" />
                           <span className="truncate">{item}</span>
                         </div>
                       ))}
@@ -249,7 +249,7 @@ export function Hero() {
                 <div className="relative z-10 flex items-center gap-2.5 pt-2">
                   <a
                     href={card.primaryCta.href}
-                    className="flex-1 min-h-[44px] inline-flex items-center justify-center gap-1.5 bg-[#E50914] text-white font-black text-[11px] sm:text-xs uppercase tracking-wider px-4 py-2.5 rounded-full hover:bg-[#c70710] transition-all shadow-[0_0_20px_rgba(229,9,20,0.4)] cursor-pointer"
+                    className="flex-1 min-h-[44px] inline-flex items-center justify-center gap-1.5 bg-[#34A853] text-white font-black text-[11px] sm:text-xs uppercase tracking-wider px-4 py-2.5 rounded-full hover:bg-[#2E9548] transition-all shadow-md cursor-pointer"
                   >
                     <span>{card.primaryCta.label}</span>
                     <ArrowRight className="h-3.5 w-3.5" />
@@ -262,10 +262,10 @@ export function Hero() {
                     className={`flex-1 min-h-[44px] inline-flex items-center justify-center gap-1.5 border font-bold text-[11px] sm:text-xs uppercase tracking-wider px-4 py-2.5 rounded-full transition-all cursor-pointer ${
                       card.secondaryCta.isWhatsApp
                         ? "bg-[#25D366]/10 border-[#25D366]/50 text-[#25D366] hover:bg-[#25D366] hover:text-white"
-                        : "border-white/30 bg-black/60 backdrop-blur-md text-white hover:border-[#E50914]"
+                        : "border-[#1F6F50]/30 bg-white text-[#1F6F50] hover:bg-[#1F6F50] hover:text-white"
                     }`}
                   >
-                    <card.secondaryCta.icon className={`h-3.5 w-3.5 ${card.secondaryCta.isWhatsApp ? "" : "text-[#E50914]"}`} />
+                    <card.secondaryCta.icon className={`h-3.5 w-3.5 ${card.secondaryCta.isWhatsApp ? "" : "text-[#1F6F50]"}`} />
                     <span>{card.secondaryCta.label}</span>
                   </a>
                 </div>
@@ -284,8 +284,8 @@ export function Hero() {
               aria-label={`Go to card ${index + 1}`}
               className={`h-2 rounded-full transition-all cursor-pointer ${
                 activeCardIndex === index
-                  ? "w-6 bg-[#E50914]"
-                  : "w-2 bg-neutral-700 hover:bg-neutral-500"
+                  ? "w-6 bg-[#34A853]"
+                  : "w-2 bg-[#CBD5E1] hover:bg-neutral-400"
               }`}
             />
           ))}

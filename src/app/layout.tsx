@@ -39,7 +39,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`dark bg-[#090909] ${anton.variable} ${hankenGrotesk.variable} ${jetbrainsMono.variable}`}
+      className={`bg-[#F8FAF8] ${anton.variable} ${hankenGrotesk.variable} ${jetbrainsMono.variable}`}
     >
       <head>
         <link rel="icon" href="/images/youth-gym-logo.jpg" type="image/jpeg" />
@@ -50,7 +50,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="antialiased bg-[#090909] text-[#e2e1eb] font-body-md min-h-screen selection:bg-[#E50914] selection:text-white">
+      <body className="antialiased bg-[#F8FAF8] text-[#1F2937] font-body-md min-h-screen selection:bg-[#34A853] selection:text-white">
         <QueryProvider>{children}</QueryProvider>
       </body>
     </html>

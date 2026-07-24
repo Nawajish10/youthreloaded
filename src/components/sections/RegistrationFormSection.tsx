@@ -80,7 +80,7 @@ export function RegistrationFormSection() {
 
   const formValues = watch();
 
-  // Focus active input on step change without scrolling the page down on initial load
+  // Focus active input on step change without scrolling page down on initial load
   useEffect(() => {
     if (currentStep > 1 && inputRef.current) {
       inputRef.current.focus({ preventScroll: true });
@@ -175,9 +175,9 @@ export function RegistrationFormSection() {
   // Animation variants
   const variants = {
     enter: (dir: number) => ({
-      x: dir > 0 ? 50 : -50,
+      x: dir > 0 ? 40 : -40,
       opacity: 0,
-      scale: 0.96,
+      scale: 0.98,
     }),
     center: {
       x: 0,
@@ -185,41 +185,38 @@ export function RegistrationFormSection() {
       scale: 1,
     },
     exit: (dir: number) => ({
-      x: dir < 0 ? 50 : -50,
+      x: dir < 0 ? 40 : -40,
       opacity: 0,
-      scale: 0.96,
+      scale: 0.98,
     }),
   };
 
   return (
-    <section className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-[#070707] relative overflow-hidden" id="register">
-      {/* Ambient Red Glows */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#E50914]/10 rounded-full blur-[180px] pointer-events-none" />
-
+    <section className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-[#F8FAF8] relative overflow-hidden" id="register">
       <div className="max-w-3xl mx-auto relative z-10">
         {/* Header Section Badge */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 rounded-full bg-[#171717] px-4 py-1.5 border border-[#E50914]/40 text-xs font-mono font-bold uppercase tracking-widest text-[#E50914] shadow-[0_0_15px_rgba(229,9,20,0.25)]">
-            <Flame className="h-4 w-4 animate-pulse text-[#E50914]" />
+          <div className="inline-flex items-center gap-2 rounded-full bg-[#1F6F50]/10 px-4 py-1.5 border border-[#1F6F50]/20 text-xs font-mono font-bold uppercase tracking-widest text-[#1F6F50] shadow-sm">
+            <Flame className="h-4 w-4 text-[#34A853]" />
             <span>Fast 1-Minute Registration</span>
           </div>
         </div>
 
         {/* Main Card Container */}
-        <div className="w-full rounded-3xl bg-[#111111] border border-white/10 p-6 sm:p-10 shadow-[0_25px_60px_rgba(0,0,0,0.9)] backdrop-blur-2xl relative min-h-[500px] flex flex-col justify-between">
+        <div className="w-full rounded-3xl bg-white border border-[#E5E7EB] p-6 sm:p-10 shadow-xl relative min-h-[500px] flex flex-col justify-between">
           {!submitted ? (
             <>
               {/* Progress Indicator Header */}
               <div className="mb-6 space-y-3">
                 <div className="flex items-center justify-between text-xs font-mono font-bold uppercase tracking-wider">
-                  <span className="text-[#E50914]">Step {currentStep} of {TOTAL_STEPS}</span>
-                  <span className="text-neutral-400">{progressPercentage}% Complete</span>
+                  <span className="text-[#1F6F50]">Step {currentStep} of {TOTAL_STEPS}</span>
+                  <span className="text-[#6B7280]">{progressPercentage}% Complete</span>
                 </div>
 
                 {/* Progress Bar */}
-                <div className="w-full h-2 rounded-full bg-[#1a1a1a] overflow-hidden border border-white/5">
+                <div className="w-full h-2 rounded-full bg-[#E5E7EB] overflow-hidden">
                   <motion.div
-                    className="h-full bg-gradient-to-r from-[#c70710] to-[#E50914] rounded-full shadow-[0_0_12px_rgba(229,9,20,0.6)]"
+                    className="h-full bg-gradient-to-r from-[#1F6F50] to-[#34A853] rounded-full"
                     initial={{ width: "0%" }}
                     animate={{ width: `${progressPercentage}%` }}
                     transition={{ duration: 0.35, ease: "easeOut" }}
@@ -244,10 +241,10 @@ export function RegistrationFormSection() {
                         className="space-y-5"
                       >
                         <div>
-                          <h3 className="font-headline-lg text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-white tracking-tight leading-tight">
-                            Welcome! What&apos;s your <span className="text-[#E50914]">full name?</span>
+                          <h3 className="font-headline-lg text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-[#1F2937] tracking-tight leading-tight">
+                            Welcome! What&apos;s your <span className="text-[#1F6F50]">full name?</span>
                           </h3>
-                          <p className="text-sm text-neutral-400 mt-2">
+                          <p className="text-sm text-[#6B7280] mt-2">
                             We&apos;ll use this to personalize your experience & membership pass.
                           </p>
                         </div>
@@ -260,10 +257,10 @@ export function RegistrationFormSection() {
                               inputRef.current = e;
                             }}
                             placeholder="John Doe"
-                            className="w-full h-14 rounded-2xl bg-[#080808] border border-white/15 px-5 text-base sm:text-lg text-white placeholder-neutral-600 focus:border-[#E50914] focus:ring-2 focus:ring-[#E50914]/30 focus:outline-none transition-all"
+                            className="w-full h-14 rounded-2xl bg-white border border-[#E5E7EB] px-5 text-base sm:text-lg text-[#1F2937] placeholder-neutral-400 focus:border-[#34A853] focus:ring-2 focus:ring-[#34A853]/20 focus:outline-none transition-all shadow-xs"
                           />
                           {errors.fullName && (
-                            <p className="text-xs text-red-400 mt-2 font-medium">{errors.fullName.message}</p>
+                            <p className="text-xs text-red-500 mt-2 font-medium">{errors.fullName.message}</p>
                           )}
                         </div>
                       </motion.div>
@@ -282,10 +279,10 @@ export function RegistrationFormSection() {
                         className="space-y-5"
                       >
                         <div>
-                          <h3 className="font-headline-lg text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-white tracking-tight leading-tight">
-                            What&apos;s your <span className="text-[#E50914]">mobile number?</span>
+                          <h3 className="font-headline-lg text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-[#1F2937] tracking-tight leading-tight">
+                            What&apos;s your <span className="text-[#1F6F50]">mobile number?</span>
                           </h3>
-                          <p className="text-sm text-neutral-400 mt-2">
+                          <p className="text-sm text-[#6B7280] mt-2">
                             Our fitness advisor will contact you within 30 minutes to confirm your visit.
                           </p>
                         </div>
@@ -299,10 +296,10 @@ export function RegistrationFormSection() {
                             }}
                             type="tel"
                             placeholder="+91 98765 43210"
-                            className="w-full h-14 rounded-2xl bg-[#080808] border border-white/15 px-5 text-base sm:text-lg text-white placeholder-neutral-600 focus:border-[#E50914] focus:ring-2 focus:ring-[#E50914]/30 focus:outline-none transition-all font-mono"
+                            className="w-full h-14 rounded-2xl bg-white border border-[#E5E7EB] px-5 text-base sm:text-lg text-[#1F2937] placeholder-neutral-400 focus:border-[#34A853] focus:ring-2 focus:ring-[#34A853]/20 focus:outline-none transition-all font-mono shadow-xs"
                           />
                           {errors.mobile && (
-                            <p className="text-xs text-red-400 mt-2 font-medium">{errors.mobile.message}</p>
+                            <p className="text-xs text-red-500 mt-2 font-medium">{errors.mobile.message}</p>
                           )}
                         </div>
                       </motion.div>
@@ -321,10 +318,10 @@ export function RegistrationFormSection() {
                         className="space-y-5"
                       >
                         <div>
-                          <h3 className="font-headline-lg text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-white tracking-tight leading-tight">
-                            What&apos;s your <span className="text-[#E50914]">age group?</span>
+                          <h3 className="font-headline-lg text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-[#1F2937] tracking-tight leading-tight">
+                            What&apos;s your <span className="text-[#1F6F50]">age group?</span>
                           </h3>
-                          <p className="text-sm text-neutral-400 mt-2">
+                          <p className="text-sm text-[#6B7280] mt-2">
                             Helps us tailor your workout intensity and safety guidelines.
                           </p>
                         </div>
@@ -345,8 +342,8 @@ export function RegistrationFormSection() {
                                 onClick={() => setValue("age", item.val, { shouldValidate: true })}
                                 className={`p-4 rounded-2xl border text-sm font-bold text-center transition-all cursor-pointer ${
                                   isSelected
-                                    ? "bg-[#E50914] border-[#E50914] text-white shadow-[0_0_20px_rgba(229,9,20,0.4)] scale-[1.02]"
-                                    : "bg-[#080808] border-white/10 text-neutral-300 hover:border-white/30"
+                                    ? "bg-[#1F6F50] border-[#1F6F50] text-white shadow-md scale-[1.02]"
+                                    : "bg-white border-[#E5E7EB] text-[#1F2937] hover:border-[#34A853]"
                                 }`}
                               >
                                 {item.label}
@@ -370,10 +367,10 @@ export function RegistrationFormSection() {
                         className="space-y-5"
                       >
                         <div>
-                          <h3 className="font-headline-lg text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-white tracking-tight leading-tight">
-                            Select your <span className="text-[#E50914]">gender</span>
+                          <h3 className="font-headline-lg text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-[#1F2937] tracking-tight leading-tight">
+                            Select your <span className="text-[#1F6F50]">gender</span>
                           </h3>
-                          <p className="text-sm text-neutral-400 mt-2">
+                          <p className="text-sm text-[#6B7280] mt-2">
                             Used for customized training recommendations and facility access.
                           </p>
                         </div>
@@ -395,8 +392,8 @@ export function RegistrationFormSection() {
                                 }}
                                 className={`p-5 rounded-2xl border text-left flex items-center justify-between transition-all cursor-pointer ${
                                   isSelected
-                                    ? "bg-[#1f090a] border-[#E50914] text-white shadow-[0_0_25px_rgba(229,9,20,0.3)] scale-[1.02]"
-                                    : "bg-[#080808] border-white/10 text-neutral-300 hover:border-white/30"
+                                    ? "bg-[#1F6F50]/10 border-[#1F6F50] text-[#1F6F50] shadow-md scale-[1.02]"
+                                    : "bg-white border-[#E5E7EB] text-[#1F2937] hover:border-[#34A853]"
                                 }`}
                               >
                                 <div className="flex items-center gap-3">
@@ -405,7 +402,7 @@ export function RegistrationFormSection() {
                                 </div>
                                 <div
                                   className={`h-5 w-5 rounded-full border flex items-center justify-center ${
-                                    isSelected ? "border-[#E50914] bg-[#E50914]" : "border-neutral-700"
+                                    isSelected ? "border-[#34A853] bg-[#34A853]" : "border-neutral-300"
                                   }`}
                                 >
                                   {isSelected && <CheckCircle2 className="h-3.5 w-3.5 text-white" />}
@@ -430,10 +427,10 @@ export function RegistrationFormSection() {
                         className="space-y-5"
                       >
                         <div>
-                          <h3 className="font-headline-lg text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-white tracking-tight leading-tight">
-                            What&apos;s your primary <span className="text-[#E50914]">fitness goal?</span>
+                          <h3 className="font-headline-lg text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-[#1F2937] tracking-tight leading-tight">
+                            What&apos;s your primary <span className="text-[#1F6F50]">fitness goal?</span>
                           </h3>
-                          <p className="text-sm text-neutral-400 mt-2">
+                          <p className="text-sm text-[#6B7280] mt-2">
                             Select the main objective you want to achieve with Youth Gym Reloaded.
                           </p>
                         </div>
@@ -458,16 +455,16 @@ export function RegistrationFormSection() {
                                 }}
                                 className={`p-4 rounded-2xl border text-left flex items-center gap-3 transition-all cursor-pointer ${
                                   isSelected
-                                    ? "bg-[#1f090a] border-[#E50914] text-white shadow-[0_0_20px_rgba(229,9,20,0.3)] scale-[1.01]"
-                                    : "bg-[#080808] border-white/10 text-neutral-300 hover:border-white/30"
+                                    ? "bg-[#1F6F50]/10 border-[#1F6F50] text-[#1F6F50] shadow-md scale-[1.01]"
+                                    : "bg-white border-[#E5E7EB] text-[#1F2937] hover:border-[#34A853]"
                                 }`}
                               >
-                                <div className={`h-10 w-10 rounded-xl flex items-center justify-center shrink-0 ${isSelected ? "bg-[#E50914] text-white" : "bg-[#171717] text-[#E50914]"}`}>
+                                <div className={`h-10 w-10 rounded-xl flex items-center justify-center shrink-0 ${isSelected ? "bg-[#34A853] text-white" : "bg-[#F8FAF8] text-[#1F6F50]"}`}>
                                   <Icon className="h-5 w-5" />
                                 </div>
                                 <div>
-                                  <div className="font-bold text-sm uppercase text-white tracking-wide">{item.label}</div>
-                                  <div className="text-[11px] text-neutral-400">{item.desc}</div>
+                                  <div className="font-bold text-sm uppercase text-[#1F2937] tracking-wide">{item.label}</div>
+                                  <div className="text-[11px] text-[#6B7280]">{item.desc}</div>
                                 </div>
                               </button>
                             );
@@ -489,10 +486,10 @@ export function RegistrationFormSection() {
                         className="space-y-5"
                       >
                         <div>
-                          <h3 className="font-headline-lg text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-white tracking-tight leading-tight">
-                            When do you prefer to <span className="text-[#E50914]">work out?</span>
+                          <h3 className="font-headline-lg text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-[#1F2937] tracking-tight leading-tight">
+                            When do you prefer to <span className="text-[#1F6F50]">work out?</span>
                           </h3>
-                          <p className="text-sm text-neutral-400 mt-2">
+                          <p className="text-sm text-[#6B7280] mt-2">
                             Select your preferred time slot for training.
                           </p>
                         </div>
@@ -515,16 +512,16 @@ export function RegistrationFormSection() {
                                 }}
                                 className={`p-5 rounded-2xl border text-left flex items-center gap-4 transition-all cursor-pointer ${
                                   isSelected
-                                    ? "bg-[#1f090a] border-[#E50914] text-white shadow-[0_0_20px_rgba(229,9,20,0.3)] scale-[1.01]"
-                                    : "bg-[#080808] border-white/10 text-neutral-300 hover:border-white/30"
+                                    ? "bg-[#1F6F50]/10 border-[#1F6F50] text-[#1F6F50] shadow-md scale-[1.01]"
+                                    : "bg-white border-[#E5E7EB] text-[#1F2937] hover:border-[#34A853]"
                                 }`}
                               >
-                                <div className={`h-12 w-12 rounded-xl flex items-center justify-center shrink-0 ${isSelected ? "bg-[#E50914] text-white" : "bg-[#171717] text-[#E50914]"}`}>
+                                <div className={`h-12 w-12 rounded-xl flex items-center justify-center shrink-0 ${isSelected ? "bg-[#34A853] text-white" : "bg-[#F8FAF8] text-[#1F6F50]"}`}>
                                   <Icon className="h-6 w-6" />
                                 </div>
                                 <div>
-                                  <div className="font-bold text-base uppercase text-white tracking-wide">{item.label}</div>
-                                  <div className="text-xs text-neutral-400 font-mono mt-0.5">{item.timing}</div>
+                                  <div className="font-bold text-base uppercase text-[#1F2937] tracking-wide">{item.label}</div>
+                                  <div className="text-xs text-[#6B7280] font-mono mt-0.5">{item.timing}</div>
                                 </div>
                               </button>
                             );
@@ -546,10 +543,10 @@ export function RegistrationFormSection() {
                         className="space-y-5"
                       >
                         <div>
-                          <h3 className="font-headline-lg text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-white tracking-tight leading-tight">
-                            Which membership are you <span className="text-[#E50914]">interested in?</span>
+                          <h3 className="font-headline-lg text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-[#1F2937] tracking-tight leading-tight">
+                            Which membership are you <span className="text-[#1F6F50]">interested in?</span>
                           </h3>
-                          <p className="text-sm text-neutral-400 mt-2">
+                          <p className="text-sm text-[#6B7280] mt-2">
                             Select a plan to lock in your pass & special registration offer.
                           </p>
                         </div>
@@ -571,18 +568,18 @@ export function RegistrationFormSection() {
                                 }}
                                 className={`p-5 rounded-2xl border text-left relative transition-all cursor-pointer ${
                                   isSelected
-                                    ? "bg-[#1f090a] border-[#E50914] text-white shadow-[0_0_25px_rgba(229,9,20,0.35)] scale-[1.02]"
-                                    : "bg-[#080808] border-white/10 text-neutral-300 hover:border-white/30"
+                                    ? "bg-[#1F6F50]/10 border-[#1F6F50] text-[#1F6F50] shadow-md scale-[1.02]"
+                                    : "bg-white border-[#E5E7EB] text-[#1F2937] hover:border-[#34A853]"
                                 }`}
                               >
                                 {item.badge && (
-                                  <span className="absolute -top-2.5 right-4 bg-[#E50914] text-white text-[10px] font-mono font-black uppercase px-2.5 py-0.5 rounded-full shadow-md">
+                                  <span className="absolute -top-2.5 right-4 bg-[#F59E0B] text-white text-[10px] font-mono font-black uppercase px-2.5 py-0.5 rounded-full shadow-xs">
                                     {item.badge}
                                   </span>
                                 )}
-                                <div className="font-headline-lg text-lg font-black uppercase text-white tracking-wide">{item.label}</div>
-                                <div className="text-xl font-extrabold text-[#E50914] mt-1">{item.price}</div>
-                                <div className="text-xs text-neutral-400 font-mono mt-1">{item.sub}</div>
+                                <div className="font-headline-lg text-lg font-black uppercase text-[#1F2937] tracking-wide">{item.label}</div>
+                                <div className="text-xl font-extrabold text-[#1F6F50] mt-1">{item.price}</div>
+                                <div className="text-xs text-[#6B7280] font-mono mt-1">{item.sub}</div>
                               </button>
                             );
                           })}
@@ -603,17 +600,17 @@ export function RegistrationFormSection() {
                         className="space-y-5"
                       >
                         <div>
-                          <h3 className="font-headline-lg text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-white tracking-tight leading-tight">
-                            Almost done! <span className="text-[#E50914]">Submit your registration</span>
+                          <h3 className="font-headline-lg text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-[#1F2937] tracking-tight leading-tight">
+                            Almost done! <span className="text-[#1F6F50]">Submit your registration</span>
                           </h3>
-                          <p className="text-sm text-neutral-400 mt-2">
+                          <p className="text-sm text-[#6B7280] mt-2">
                             Provide an optional email for your digital membership pass & confirmation.
                           </p>
                         </div>
 
                         <div className="space-y-4 pt-2">
                           <div>
-                            <label className="block text-xs font-mono uppercase text-neutral-400 mb-1.5 font-semibold">
+                            <label className="block text-xs font-mono uppercase text-[#6B7280] mb-1.5 font-semibold">
                               Email Address (Optional)
                             </label>
                             <input
@@ -624,26 +621,26 @@ export function RegistrationFormSection() {
                               }}
                               type="email"
                               placeholder="john@example.com"
-                              className="w-full h-14 rounded-2xl bg-[#080808] border border-white/15 px-5 text-base text-white placeholder-neutral-600 focus:border-[#E50914] focus:ring-2 focus:ring-[#E50914]/30 focus:outline-none transition-all"
+                              className="w-full h-14 rounded-2xl bg-white border border-[#E5E7EB] px-5 text-base text-[#1F2937] placeholder-neutral-400 focus:border-[#34A853] focus:ring-2 focus:ring-[#34A853]/20 focus:outline-none transition-all shadow-xs"
                             />
                             {errors.email && (
-                              <p className="text-xs text-red-400 mt-1">{errors.email.message}</p>
+                              <p className="text-xs text-red-500 mt-1">{errors.email.message}</p>
                             )}
                           </div>
 
                           <div className="pt-2">
-                            <label className="flex items-start gap-3 cursor-pointer text-xs sm:text-sm text-neutral-300">
+                            <label className="flex items-start gap-3 cursor-pointer text-xs sm:text-sm text-[#1F2937]">
                               <input
                                 type="checkbox"
                                 {...register("agreeToTerms")}
-                                className="mt-1 rounded border-neutral-700 bg-neutral-900 text-[#E50914] focus:ring-[#E50914] h-4 w-4"
+                                className="mt-1 rounded border-neutral-300 bg-white text-[#34A853] focus:ring-[#34A853] h-4 w-4"
                               />
                               <span className="leading-relaxed">
                                 I agree to be contacted regarding my membership enquiry.
                               </span>
                             </label>
                             {errors.agreeToTerms && (
-                              <p className="text-xs text-red-400 mt-1 font-medium">{errors.agreeToTerms.message}</p>
+                              <p className="text-xs text-red-500 mt-1 font-medium">{errors.agreeToTerms.message}</p>
                             )}
                           </div>
                         </div>
@@ -653,12 +650,12 @@ export function RegistrationFormSection() {
                 </div>
 
                 {/* Footer Controls (Back & Continue / Submit Buttons) */}
-                <div className="pt-8 border-t border-white/10 flex items-center justify-between gap-4 mt-6">
+                <div className="pt-8 border-t border-[#E5E7EB] flex items-center justify-between gap-4 mt-6">
                   {currentStep > 1 ? (
                     <button
                       type="button"
                       onClick={handlePrevStep}
-                      className="px-5 py-3 rounded-full border border-white/20 text-neutral-300 hover:text-white hover:border-white text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer"
+                      className="px-5 py-3 rounded-full border border-[#E5E7EB] text-[#1F2937] hover:border-[#1F6F50] hover:text-[#1F6F50] text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 transition-all cursor-pointer"
                     >
                       <ArrowLeft className="h-4 w-4" />
                       <span>Back</span>
@@ -671,7 +668,7 @@ export function RegistrationFormSection() {
                     <button
                       type="button"
                       onClick={handleNextStep}
-                      className="px-8 py-3.5 rounded-full bg-[#E50914] text-white text-xs font-black uppercase tracking-widest hover:bg-[#c70710] hover:scale-105 transition-all shadow-[0_0_20px_rgba(229,9,20,0.4)] flex items-center gap-2 cursor-pointer"
+                      className="px-8 py-3.5 rounded-full bg-[#34A853] text-white text-xs font-black uppercase tracking-widest hover:bg-[#2E9548] hover:scale-105 transition-all shadow-md flex items-center gap-2 cursor-pointer"
                     >
                       <span>Continue</span>
                       <ArrowRight className="h-4 w-4" />
@@ -680,7 +677,7 @@ export function RegistrationFormSection() {
                     <button
                       type="submit"
                       disabled={loading}
-                      className="px-8 py-4 rounded-full bg-[#E50914] text-white text-xs font-black uppercase tracking-widest hover:bg-[#c70710] hover:scale-105 transition-all shadow-[0_0_30px_rgba(229,9,20,0.5)] flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                      className="px-8 py-4 rounded-full bg-[#34A853] text-white text-xs font-black uppercase tracking-widest hover:bg-[#2E9548] hover:scale-105 transition-all shadow-lg flex items-center gap-2 cursor-pointer disabled:opacity-50"
                     >
                       <span>{loading ? "SUBMITTING..." : "SUBMIT REGISTRATION"}</span>
                       <ArrowRight className="h-4 w-4" />
@@ -692,27 +689,27 @@ export function RegistrationFormSection() {
           ) : (
             /* SUCCESS SCREEN */
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4 }}
               className="py-12 text-center flex flex-col items-center justify-center space-y-6 my-auto"
             >
-              <div className="h-24 w-24 rounded-full bg-[#E50914]/20 text-[#E50914] flex items-center justify-center shadow-[0_0_40px_rgba(229,9,20,0.4)] animate-bounce">
+              <div className="h-24 w-24 rounded-full bg-[#34A853]/15 text-[#34A853] flex items-center justify-center shadow-md animate-bounce">
                 <CheckCircle2 className="h-12 w-12" />
               </div>
 
               <div>
-                <h4 className="font-headline-lg text-3xl sm:text-4xl font-black uppercase text-white tracking-tight">
-                  🎉 Registration <span className="text-[#E50914]">Submitted Successfully!</span>
+                <h4 className="font-headline-lg text-3xl sm:text-4xl font-black uppercase text-[#1F2937] tracking-tight">
+                  🎉 Registration <span className="text-[#1F6F50]">Submitted Successfully!</span>
                 </h4>
                 {regId && (
-                  <div className="inline-block mt-3 bg-[#171717] border border-[#E50914]/50 px-5 py-2 rounded-full text-xs font-mono font-bold text-[#E50914] shadow-md">
+                  <div className="inline-block mt-3 bg-[#F8FAF8] border border-[#1F6F50]/30 px-5 py-2 rounded-full text-xs font-mono font-bold text-[#1F6F50] shadow-xs">
                     PASS ID: {regId}
                   </div>
                 )}
               </div>
 
-              <p className="text-sm sm:text-base text-neutral-300 max-w-md leading-relaxed">
+              <p className="text-sm sm:text-base text-[#6B7280] max-w-md leading-relaxed">
                 Thank you for your interest! Our certified fitness team will contact you shortly to help you begin your fitness journey.
               </p>
 
@@ -720,7 +717,7 @@ export function RegistrationFormSection() {
               <div className="pt-4 flex flex-col sm:flex-row items-center gap-4 w-full max-w-md">
                 <a
                   href="tel:+917074975231"
-                  className="w-full sm:flex-1 py-3.5 bg-[#E50914] text-white font-bold text-xs uppercase tracking-widest rounded-full hover:bg-[#c70710] transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(229,9,20,0.4)]"
+                  className="w-full sm:flex-1 py-3.5 bg-[#34A853] text-white font-bold text-xs uppercase tracking-widest rounded-full hover:bg-[#2E9548] transition-all flex items-center justify-center gap-2 shadow-md"
                 >
                   <Phone className="h-4 w-4" />
                   <span>Call Now</span>
@@ -730,7 +727,7 @@ export function RegistrationFormSection() {
                   href="https://wa.me/917479207804?text=Hi%20Youth%20Gym%20Reloaded!%20I%20just%20submitted%20my%20registration."
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full sm:flex-1 py-3.5 bg-[#25D366]/10 border border-[#25D366]/40 text-[#25D366] font-bold text-xs uppercase tracking-widest rounded-full hover:bg-[#25D366] hover:text-white transition-all flex items-center justify-center gap-2"
+                  className="w-full sm:flex-1 py-3.5 bg-[#25D366]/10 border border-[#25D366]/40 text-[#25D366] font-bold text-xs uppercase tracking-widest rounded-full hover:bg-[#25D366] hover:text-white transition-all flex items-center justify-center gap-2 shadow-xs"
                 >
                   <MessageCircle className="h-4 w-4" />
                   <span>WhatsApp</span>
@@ -744,7 +741,7 @@ export function RegistrationFormSection() {
                   setCurrentStep(1);
                   reset();
                 }}
-                className="text-xs text-[#E50914] font-bold uppercase underline pt-4 cursor-pointer hover:text-white transition-colors flex items-center gap-1.5"
+                className="text-xs text-[#1F6F50] font-bold uppercase underline pt-4 cursor-pointer hover:text-[#34A853] transition-colors flex items-center gap-1.5"
               >
                 <RotateCcw className="h-3.5 w-3.5" />
                 <span>Register Another Member</span>
