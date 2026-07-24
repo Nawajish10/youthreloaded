@@ -42,6 +42,9 @@ export default function RootLayout({
       className={`dark bg-[#090909] ${anton.variable} ${hankenGrotesk.variable} ${jetbrainsMono.variable}`}
     >
       <head>
+        <link rel="icon" href="/images/youth-gym-logo.jpg" type="image/jpeg" />
+        <link rel="shortcut icon" href="/images/youth-gym-logo.jpg" type="image/jpeg" />
+        <link rel="apple-touch-icon" href="/images/youth-gym-logo.jpg" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

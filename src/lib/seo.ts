@@ -50,6 +50,13 @@ export function generateSEO({
       description: metaDescription,
       images: [metaImage],
     },
+    icons: {
+      icon: [
+        { url: "/images/youth-gym-logo.jpg", type: "image/jpeg" },
+      ],
+      shortcut: ["/images/youth-gym-logo.jpg"],
+      apple: ["/images/youth-gym-logo.jpg"],
+    },
     alternates: {
       canonical: url,
     },
