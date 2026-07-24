@@ -1,0 +1,56 @@
+:root {
+  /* Hex Color Tokens */
+  --color-bg: #090909;
+  --color-card: #151515;
+  --color-accent: #E50914;
+  --color-accent-hover: #C70710;
+  --color-secondary-accent: #FF2832;
+  --color-text: #FFFFFF;
+  --color-text-secondary: #B5B5B5;
+  --color-border: rgba(255, 255, 255, 0.08);
+
+  /* Fonts */
+  --font-anton: var(--font-anton), sans-serif;
+  --font-hanken: var(--font-hanken), sans-serif;
+  --font-jetbrains: var(--font-jetbrains), monospace;
+
+  /* Shadows */
+  --shadow-neon: 0 0 25px rgba(229, 9, 20, 0.4);
+  --shadow-card: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-hanken);
+  overflow-x: hidden;
+}
+
+/* Custom Utilities */
+.neon-glow {
+  box-shadow: 0 0 30px rgba(229, 9, 20, 0.35);
+}
+
+.text-accent {
+  color: var(--color-accent);
+}
+
+.bg-accent {
+  background-color: var(--color-accent);
+}
+
+.bg-card-dark {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+}
+
+/* Floating keyframe animation */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}

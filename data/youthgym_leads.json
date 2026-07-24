@@ -1,0 +1,54 @@
+[
+  {
+    "id": "REG-20260724-6972",
+    "fullName": "Nawazish Akhtar",
+    "mobile": "8116148227",
+    "email": "",
+    "age": "18_25",
+    "gender": "male",
+    "fitnessGoal": "endurance",
+    "preferredTime": "morning",
+    "membershipPlan": "12_months",
+    "agreeToTerms": true,
+    "createdAt": "2026-07-24T14:21:12.390Z"
+  },
+  {
+    "id": "REG-20260724-4301",
+    "fullName": "Nawazish Akhtar",
+    "mobile": "8116148227",
+    "email": "vybeeai@gmail.com",
+    "age": "18_25",
+    "gender": "male",
+    "fitnessGoal": "weight_loss",
+    "preferredTime": "morning",
+    "membershipPlan": "3_months",
+    "agreeToTerms": true,
+    "createdAt": "2026-07-24T12:51:41.648Z"
+  },
+  {
+    "id": "REG-20260724-4307",
+    "fullName": "Sarah Connor (Live Test)",
+    "mobile": "9876543210",
+    "email": "sarah@gymsoftware.com",
+    "age": "26_35",
+    "gender": "female",
+    "fitnessGoal": "weight_loss",
+    "preferredTime": "evening",
+    "membershipPlan": "6_months",
+    "agreeToTerms": true,
+    "createdAt": "2026-07-24T12:25:31.811Z"
+  },
+  {
+    "id": "REG-20260724-7275",
+    "fullName": "Integration Test Member",
+    "mobile": "9998887770",
+    "email": "test@youthgym.com",
+    "age": "18_25",
+    "gender": "male",
+    "fitnessGoal": "muscle_gain",
+    "preferredTime": "morning",
+    "membershipPlan": "3_months",
+    "agreeToTerms": true,
+    "createdAt": "2026-07-24T12:12:35.382Z"
+  }
+]
