@@ -25,8 +25,8 @@ export function Header() {
       className={cn(
         "sticky top-[42px] z-50 w-full transition-all duration-300",
         isScrolled
-          ? "bg-[#090909]/90 backdrop-blur-md border-b border-white/[0.08] py-3.5 shadow-xl shadow-black/50"
-          : "bg-transparent py-5"
+          ? "bg-[#090909]/95 backdrop-blur-md border-b border-white/[0.08] py-2 shadow-xl shadow-black/50"
+          : "bg-[#090909] py-2.5 border-b border-white/5"
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">

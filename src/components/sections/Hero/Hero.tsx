@@ -1,24 +1,23 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
 import {
-  ChevronLeft,
-  ChevronRight,
   ArrowRight,
   Phone,
   MessageCircle,
+  Flame,
   Dumbbell,
   Sparkles,
   Award,
   Users,
-  Flame,
+  ChevronRight,
+  CheckCircle2,
 } from "lucide-react";
 import { TrustBadges } from "./TrustBadges";
 
-const SLIDES = [
-  // SLIDE 1: Welcome / Modern Gym Interior
+const CARDS = [
+  // CARD 1: Transform Your Body
   {
     id: 1,
     tag: "YOUTH GYM RELOADED",
@@ -29,16 +28,15 @@ const SLIDES = [
         <span className="text-[#E50914]">BUILD YOUR STRENGTH.</span>
       </>
     ),
-    subheading: "Premium equipment, certified trainers, and personalized workout programs inside a high-end cinematic fitness facility.",
+    description: "Premium equipment, certified trainers, and personalized workout programs inside a high-end cinematic fitness facility.",
     bgImage: "/images/cinematic-gym-bg.png",
     primaryCta: { label: "JOIN NOW", href: "#register", icon: ArrowRight },
     secondaryCta: { label: "CALL NOW", href: "tel:+917074975231", icon: Phone },
-    showTrustBadges: true,
   },
-  // SLIDE 2: Strength & Membership
+  // CARD 2: Affordable Memberships
   {
     id: 2,
-    tag: "FLEXIBLE MEMBERSHIPS",
+    tag: "FLEXIBLE PRICING",
     tagIcon: Sparkles,
     headline: (
       <>
@@ -46,13 +44,17 @@ const SLIDES = [
         <span className="text-[#E50914]">PREMIUM EXPERIENCE.</span>
       </>
     ),
-    subheading: "Flexible plans from ₹800/mo to ₹6000/year. Zero registration fee on 3, 6, and 12-month membership packages.",
+    highlights: [
+      { label: "Monthly", value: "₹800/mo" },
+      { label: "3 Months", value: "₹2200", badge: "Popular ⭐" },
+      { label: "6 Months", value: "₹4000", badge: "Best Value ⭐" },
+      { label: "1 Year", value: "₹6000", badge: "Best Deal 👑" },
+    ],
     bgImage: "/images/slide-facilities-bg.png",
-    primaryCta: { label: "JOIN TODAY", href: "#register", icon: ArrowRight },
-    secondaryCta: { label: "VIEW ALL PLANS", href: "#membership", icon: Sparkles },
-    showTrustBadges: true,
+    primaryCta: { label: "VIEW PLANS", href: "#membership", icon: ArrowRight },
+    secondaryCta: { label: "JOIN TODAY", href: "#register", icon: Sparkles },
   },
-  // SLIDE 3: Cardio & Functional Training Zone
+  // CARD 3: Premium Facilities
   {
     id: 3,
     tag: "WORLD-CLASS AMENITIES",
@@ -63,13 +65,18 @@ const SLIDES = [
         <span className="text-[#E50914]">FITNESS FACILITY</span>
       </>
     ),
-    subheading: "Equipped with heavy power racks, cardio decks, steam showers, personal nutrition support, and spacious locker rooms.",
+    listHighlights: [
+      "Cardio Deck & Rowers",
+      "Heavy Strength Racks",
+      "Dedicated HIIT Zone",
+      "Steam & Hot Showers",
+      "Secure Locker Rooms",
+    ],
     bgImage: "/images/slide-facilities-bg.png",
     primaryCta: { label: "EXPLORE FACILITIES", href: "#why-choose-us", icon: ArrowRight },
     secondaryCta: { label: "JOIN NOW", href: "#register", icon: Dumbbell },
-    showTrustBadges: true,
   },
-  // SLIDE 4: Personal Training
+  // CARD 4: Certified Trainers
   {
     id: 4,
     tag: "EXPERT COACHING",
@@ -80,16 +87,20 @@ const SLIDES = [
         <span className="text-[#E50914]">CERTIFIED COACHES</span>
       </>
     ),
-    subheading: "Get 1-on-1 dedicated attention, custom hypertrophy programs, and fat-loss meal plans from certified fitness experts.",
+    listHighlights: [
+      "Personalized Strength Plans",
+      "Custom Nutrition Guidance",
+      "Targeted Fat Loss Programs",
+      "1-on-1 Powerlifting Support",
+    ],
     bgImage: "/images/slide-coaches-bg.png",
     primaryCta: { label: "BOOK CONSULTATION", href: "#register", icon: ArrowRight },
     secondaryCta: { label: "CALL A TRAINER", href: "tel:+917074975231", icon: Phone },
-    showTrustBadges: true,
   },
-  // SLIDE 5: Community
+  // CARD 5: Join the Community
   {
     id: 5,
-    tag: "MOTIVATING COMMUNITY",
+    tag: "JOIN THE COMMUNITY",
     tagIcon: Users,
     headline: (
       <>
@@ -97,235 +108,192 @@ const SLIDES = [
         <span className="text-[#E50914]">KEEPS YOU MOTIVATED</span>
       </>
     ),
-    subheading: "Surround yourself with like-minded athletes, friendly trainers, and an energetic gym atmosphere every single day.",
+    listHighlights: [
+      "Friendly & Supportive Environment",
+      "Ultra-Modern Equipment",
+      "Clean & Spotless Facilities",
+      "High-Energy Gym Atmosphere",
+    ],
     bgImage: "/images/slide-community-bg.png",
     primaryCta: { label: "BECOME A MEMBER", href: "#register", icon: ArrowRight },
     secondaryCta: { label: "WHATSAPP US", href: "https://wa.me/917479207804?text=Hi%20Youth%20Gym%20Reloaded!%20I%20want%20to%20know%20more%20about%20membership.", icon: MessageCircle, isWhatsApp: true },
-    showTrustBadges: true,
   },
 ];
 
 export function Hero() {
-  const [activeSlideIndex, setActiveSlideIndex] = useState(0);
-  const [direction, setDirection] = useState(1);
-  const [isPaused, setIsPaused] = useState(false);
+  const [activeCardIndex, setActiveCardIndex] = useState(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const currentSlide = SLIDES[activeSlideIndex];
-
-  // Auto-play timer (Switch slide every 7 seconds, pauses on interaction)
-  useEffect(() => {
-    if (isPaused) return;
-    const timer = setInterval(() => {
-      handleNextSlide();
-    }, 7000);
-    return () => clearInterval(timer);
-  }, [activeSlideIndex, isPaused]);
-
-  const handleNextSlide = () => {
-    setDirection(1);
-    setActiveSlideIndex((prev) => (prev + 1) % SLIDES.length);
-  };
-
-  const handlePrevSlide = () => {
-    setDirection(-1);
-    setActiveSlideIndex((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
-  };
-
-  const handleDotClick = (index: number) => {
-    setDirection(index > activeSlideIndex ? 1 : -1);
-    setActiveSlideIndex(index);
-  };
-
-  // Drag swipe handling for mobile & desktop
-  const handleDragEnd = (_: unknown, info: { offset: { x: number } }) => {
-    if (info.offset.x < -50) {
-      handleNextSlide();
-    } else if (info.offset.x > 50) {
-      handlePrevSlide();
+  // Sync scroll position with active dot indicator
+  const handleScroll = () => {
+    if (!scrollContainerRef.current) return;
+    const container = scrollContainerRef.current;
+    const cardWidth = container.firstElementChild?.clientWidth || 320;
+    const index = Math.round(container.scrollLeft / cardWidth);
+    if (index !== activeCardIndex && index >= 0 && index < CARDS.length) {
+      setActiveCardIndex(index);
     }
   };
 
-  // Slide transition animation variants
-  const slideVariants = {
-    enter: (dir: number) => ({
-      x: dir > 0 ? "100%" : "-100%",
-      opacity: 0,
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-    },
-    exit: (dir: number) => ({
-      x: dir < 0 ? "100%" : "-100%",
-      opacity: 0,
-    }),
+  const scrollToCard = (index: number) => {
+    if (!scrollContainerRef.current) return;
+    const container = scrollContainerRef.current;
+    const cardWidth = container.firstElementChild?.clientWidth || 320;
+    container.scrollTo({
+      left: index * cardWidth,
+      behavior: "smooth",
+    });
+    setActiveCardIndex(index);
   };
 
-  const TagIcon = currentSlide.tagIcon;
-
   return (
-    <section
-      id="hero"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-      className="relative min-h-[85vh] lg:min-h-[90vh] w-full bg-[#090909] overflow-hidden flex flex-col justify-between border-b border-white/10"
-    >
-      {/* 1. Carousel Slide Container */}
-      <div className="relative flex-1 flex items-center justify-center py-10 sm:py-16 px-4 sm:px-6 lg:px-8">
-        <AnimatePresence custom={direction} mode="wait">
-          <motion.div
-            key={currentSlide.id}
-            custom={direction}
-            variants={slideVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.2}
-            onDragEnd={handleDragEnd}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full max-w-5xl mx-auto text-center z-10 space-y-6 sm:space-y-8"
-          >
-            {/* Single High-Quality Background Image per Slide (Clean 45% Overlay, No Red Glows) */}
-            <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-              <Image
-                src={currentSlide.bgImage}
-                alt="Youth Gym Background"
-                fill
-                priority={currentSlide.id === 1}
-                className="object-cover object-center filter brightness-[0.55] contrast-[1.1] scale-100 transition-transform duration-700"
-              />
-              {/* Soft Dark Vignette for Crisp Text Contrast */}
-              <div className="absolute inset-0 bg-[#090909]/45" />
-              <div className="absolute inset-0 bg-gradient-to-b from-[#090909]/80 via-transparent to-[#090909]/90" />
-            </div>
-
-            {/* Mobile-First Text Stack */}
-            <div className="relative z-10 max-w-4xl mx-auto space-y-5 sm:space-y-6">
-              {/* Badge Tag */}
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4 }}
-                className="inline-flex items-center gap-2 rounded-full bg-black/60 px-4 py-1.5 border border-white/20 text-xs font-mono font-bold uppercase tracking-widest text-[#E50914] backdrop-blur-md shadow-md"
-              >
-                <TagIcon className="h-3.5 w-3.5 text-[#E50914]" />
-                <span>{currentSlide.tag}</span>
-              </motion.div>
-
-              {/* Bold Typography Headline */}
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="font-headline-lg text-3xl sm:text-5xl lg:text-6xl font-black uppercase text-white tracking-tight leading-[1.08] drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]"
-              >
-                {currentSlide.headline}
-              </motion.h1>
-
-              {/* Subheading */}
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.18 }}
-                className="text-base sm:text-lg lg:text-xl text-neutral-200 font-normal leading-relaxed max-w-2xl mx-auto drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
-              >
-                {currentSlide.subheading}
-              </motion.p>
-
-              {/* Primary & Secondary CTA Buttons */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.25 }}
-                className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 pt-2 w-full max-w-md mx-auto"
-              >
-                {/* Primary CTA */}
-                <a
-                  href={currentSlide.primaryCta.href}
-                  className="w-full sm:w-auto min-h-[48px] inline-flex items-center justify-center gap-2 bg-[#E50914] text-white font-black text-xs sm:text-sm uppercase tracking-widest px-8 py-3.5 rounded-full hover:bg-[#c70710] hover:scale-105 transition-all shadow-[0_0_20px_rgba(229,9,20,0.4)] cursor-pointer"
-                >
-                  <span>{currentSlide.primaryCta.label}</span>
-                  <ArrowRight className="h-4 w-4" />
-                </a>
-
-                {/* Secondary CTA */}
-                <a
-                  href={currentSlide.secondaryCta.href}
-                  target={currentSlide.secondaryCta.isWhatsApp ? "_blank" : undefined}
-                  rel={currentSlide.secondaryCta.isWhatsApp ? "noopener noreferrer" : undefined}
-                  className={`w-full sm:w-auto min-h-[48px] inline-flex items-center justify-center gap-2 border font-bold text-xs sm:text-sm uppercase tracking-widest px-8 py-3.5 rounded-full transition-all cursor-pointer ${
-                    currentSlide.secondaryCta.isWhatsApp
-                      ? "bg-[#25D366]/10 border-[#25D366]/50 text-[#25D366] hover:bg-[#25D366] hover:text-white"
-                      : "border-white/30 bg-black/50 backdrop-blur-md text-white hover:border-[#E50914] hover:text-[#E50914]"
-                  }`}
-                >
-                  <currentSlide.secondaryCta.icon className={`h-4 w-4 ${currentSlide.secondaryCta.isWhatsApp ? "" : "text-[#E50914]"}`} />
-                  <span>{currentSlide.secondaryCta.label}</span>
-                </a>
-              </motion.div>
-
-              {/* 2-Column Trust Badges */}
-              {currentSlide.showTrustBadges && (
-                <motion.div
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.3 }}
-                  className="pt-3 max-w-xl mx-auto"
-                >
-                  <TrustBadges />
-                </motion.div>
-              )}
-            </div>
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      {/* 2. Controls & Pagination Bar */}
-      <div className="relative z-20 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between border-t border-white/10 bg-[#090909]/90 backdrop-blur-md">
-        {/* Navigation Arrows (Desktop visible, hidden on mobile) */}
-        <div className="flex items-center gap-2">
-          <div className="hidden sm:flex items-center gap-2">
-            <button
-              type="button"
-              onClick={handlePrevSlide}
-              aria-label="Previous Slide"
-              className="h-10 w-10 rounded-full bg-[#151515] border border-white/15 text-neutral-300 hover:text-white hover:border-[#E50914] hover:bg-[#E50914]/20 transition-all flex items-center justify-center cursor-pointer shadow-md"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-
-            <button
-              type="button"
-              onClick={handleNextSlide}
-              aria-label="Next Slide"
-              className="h-10 w-10 rounded-full bg-[#151515] border border-white/15 text-neutral-300 hover:text-white hover:border-[#E50914] hover:bg-[#E50914]/20 transition-all flex items-center justify-center cursor-pointer shadow-md"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </button>
-          </div>
-
-          <span className="text-xs font-mono font-bold text-neutral-400">
-            0{activeSlideIndex + 1} / 0{SLIDES.length}
+    <section id="hero" className="pt-2 sm:pt-4 pb-8 bg-[#090909] overflow-hidden border-b border-white/10">
+      <div className="max-w-7xl mx-auto space-y-4">
+        {/* Swipe Hint Header */}
+        <div className="px-4 sm:px-6 flex items-center justify-between text-xs font-mono font-bold uppercase tracking-widest text-neutral-400">
+          <span className="text-[#E50914] flex items-center gap-1.5">
+            <Flame className="h-3.5 w-3.5 animate-pulse" />
+            <span>FEATURE HIGHLIGHTS</span>
+          </span>
+          <span className="flex items-center gap-1 text-neutral-400 animate-pulse">
+            <span>Swipe</span>
+            <ChevronRight className="h-3.5 w-3.5 text-[#E50914]" />
           </span>
         </div>
 
+        {/* Horizontal Swipeable Card Carousel (88vw width on mobile so next card peeks into view) */}
+        <div
+          ref={scrollContainerRef}
+          onScroll={handleScroll}
+          className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-4 sm:px-6 py-2 scrollbar-none"
+        >
+          {CARDS.map((card) => {
+            const TagIcon = card.tagIcon;
+            return (
+              <div
+                key={card.id}
+                className="snap-center shrink-0 w-[88vw] max-w-[360px] sm:w-[420px] lg:w-[460px] h-[480px] sm:h-[510px] rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.85)] border border-white/15 bg-[#121212] relative flex flex-col justify-between p-6 sm:p-7"
+              >
+                {/* Single Clean Background Image per Card */}
+                <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                  <Image
+                    src={card.bgImage}
+                    alt="Youth Gym Feature"
+                    fill
+                    priority={card.id === 1}
+                    className="object-cover object-center filter brightness-[0.5] contrast-[1.1]"
+                  />
+                  {/* Subtle Dark Vignette (45% darkness) */}
+                  <div className="absolute inset-0 bg-[#090909]/45" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-[#090909]/80 via-transparent to-[#090909]/95" />
+                </div>
+
+                {/* Card Header Tag */}
+                <div className="relative z-10">
+                  <div className="inline-flex items-center gap-2 rounded-full bg-black/70 px-3.5 py-1 border border-white/20 text-[11px] font-mono font-bold uppercase tracking-widest text-[#E50914] backdrop-blur-md shadow-md">
+                    <TagIcon className="h-3.5 w-3.5 text-[#E50914]" />
+                    <span>{card.tag}</span>
+                  </div>
+                </div>
+
+                {/* Card Main Typography & Body Content */}
+                <div className="relative z-10 space-y-4 my-auto">
+                  <h2 className="font-headline-lg text-2xl sm:text-3xl font-black uppercase text-white tracking-tight leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
+                    {card.headline}
+                  </h2>
+
+                  {/* Standard Description */}
+                  {card.description && (
+                    <p className="text-xs sm:text-sm text-neutral-200 font-normal leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                      {card.description}
+                    </p>
+                  )}
+
+                  {/* Membership Pricing Preview Grid (Card 2) */}
+                  {card.highlights && (
+                    <div className="grid grid-cols-2 gap-2 pt-1">
+                      {card.highlights.map((h) => (
+                        <div
+                          key={h.label}
+                          className="bg-black/70 border border-white/15 p-2.5 rounded-xl text-center backdrop-blur-md relative"
+                        >
+                          {h.badge && (
+                            <span className="absolute -top-2 left-1/2 -translate-x-1/2 bg-[#E50914] text-white text-[9px] font-mono font-bold px-2 py-0.5 rounded-full uppercase">
+                              {h.badge}
+                            </span>
+                          )}
+                          <div className="text-[10px] font-mono font-bold text-neutral-400 uppercase">{h.label}</div>
+                          <div className="text-xs font-black text-[#E50914] mt-0.5">{h.value}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Feature Lists (Cards 3, 4, 5) */}
+                  {card.listHighlights && (
+                    <div className="space-y-2 pt-1">
+                      {card.listHighlights.map((item) => (
+                        <div
+                          key={item}
+                          className="flex items-center gap-2 bg-black/60 border border-white/15 px-3 py-1.5 rounded-xl text-xs text-neutral-200 backdrop-blur-md"
+                        >
+                          <CheckCircle2 className="h-3.5 w-3.5 text-[#E50914] shrink-0" />
+                          <span className="truncate">{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Card Action Buttons (Primary & Secondary CTA) */}
+                <div className="relative z-10 flex items-center gap-2.5 pt-2">
+                  <a
+                    href={card.primaryCta.href}
+                    className="flex-1 min-h-[44px] inline-flex items-center justify-center gap-1.5 bg-[#E50914] text-white font-black text-[11px] sm:text-xs uppercase tracking-wider px-4 py-2.5 rounded-full hover:bg-[#c70710] transition-all shadow-[0_0_20px_rgba(229,9,20,0.4)] cursor-pointer"
+                  >
+                    <span>{card.primaryCta.label}</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </a>
+
+                  <a
+                    href={card.secondaryCta.href}
+                    target={card.secondaryCta.isWhatsApp ? "_blank" : undefined}
+                    rel={card.secondaryCta.isWhatsApp ? "noopener noreferrer" : undefined}
+                    className={`flex-1 min-h-[44px] inline-flex items-center justify-center gap-1.5 border font-bold text-[11px] sm:text-xs uppercase tracking-wider px-4 py-2.5 rounded-full transition-all cursor-pointer ${
+                      card.secondaryCta.isWhatsApp
+                        ? "bg-[#25D366]/10 border-[#25D366]/50 text-[#25D366] hover:bg-[#25D366] hover:text-white"
+                        : "border-white/30 bg-black/60 backdrop-blur-md text-white hover:border-[#E50914]"
+                    }`}
+                  >
+                    <card.secondaryCta.icon className={`h-3.5 w-3.5 ${card.secondaryCta.isWhatsApp ? "" : "text-[#E50914]"}`} />
+                    <span>{card.secondaryCta.label}</span>
+                  </a>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
         {/* Small Touch-Friendly Pagination Dots */}
-        <div className="flex items-center gap-2">
-          {SLIDES.map((slide, index) => (
+        <div className="flex items-center justify-center gap-2 pt-2">
+          {CARDS.map((card, index) => (
             <button
-              key={slide.id}
+              key={card.id}
               type="button"
-              onClick={() => handleDotClick(index)}
-              aria-label={`Go to slide ${index + 1}`}
+              onClick={() => scrollToCard(index)}
+              aria-label={`Go to card ${index + 1}`}
               className={`h-2 rounded-full transition-all cursor-pointer ${
-                activeSlideIndex === index
+                activeCardIndex === index
                   ? "w-6 bg-[#E50914]"
-                  : "w-2 bg-neutral-600 hover:bg-neutral-400"
+                  : "w-2 bg-neutral-700 hover:bg-neutral-500"
               }`}
             />
           ))}
+        </div>
+
+        {/* Trust Badges Positioned ONCE Below Hero Card Carousel */}
+        <div className="px-4 sm:px-6 pt-4">
+          <TrustBadges />
         </div>
       </div>
     </section>
